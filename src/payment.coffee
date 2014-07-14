@@ -116,7 +116,7 @@ hasTextSelected = (target) ->
 
 reFormatCardNumber = (e) ->
   setTimeout =>
-    target = e.currentTarget
+    target = e.target
     value   = J.val(target)
     value   = Payment.fns.formatCardNumber(value)
     J.val(target, value)
@@ -126,7 +126,7 @@ formatCardNumber = (e) ->
   digit = String.fromCharCode(e.which)
   return unless /^\d+$/.test(digit)
 
-  target = e.currentTarget
+  target = e.target
   value   = J.val(target)
   card    = cardFromNumber(value + digit)
   length  = (value.replace(/\D/g, '') + digit).length
@@ -156,7 +156,7 @@ formatCardNumber = (e) ->
     J.val(target, value + digit + ' ')
 
 formatBackCardNumber = (e) ->
-  target = e.currentTarget
+  target = e.target
   value   = J.val(target)
 
   return if e.meta
@@ -183,7 +183,7 @@ formatExpiry = (e) ->
   digit = String.fromCharCode(e.which)
   return unless /^\d+$/.test(digit)
 
-  target = e.currentTarget
+  target = e.target
   val     = J.val(target) + digit
 
   if /^\d$/.test(val) and val not in ['0', '1']
@@ -198,7 +198,7 @@ formatForwardExpiry = (e) ->
   digit = String.fromCharCode(e.which)
   return unless /^\d+$/.test(digit)
 
-  target = e.currentTarget
+  target = e.target
   val     = J.val(target)
 
   if /^\d\d$/.test(val)
@@ -208,7 +208,7 @@ formatForwardSlash = (e) ->
   slash = String.fromCharCode(e.which)
   return unless slash is '/'
 
-  target = e.currentTarget
+  target = e.target
   val     = J.val(target)
 
   if /^\d$/.test(val) and val isnt '0'
@@ -218,7 +218,7 @@ formatBackExpiry = (e) ->
   # If shift+backspace is pressed
   return if e.metaKey
 
-  target = e.currentTarget
+  target = e.target
   value   = J.val(target)
 
   # Return unless backspacing
@@ -257,7 +257,7 @@ restrictNumeric = (e) ->
   return e.preventDefault() if !/[\d\s]/.test(input)
 
 restrictCardNumber = (e) ->
-  target = e.currentTarget
+  target = e.target
   digit   = String.fromCharCode(e.which)
   return unless /^\d+$/.test(digit)
 
@@ -274,7 +274,7 @@ restrictCardNumber = (e) ->
     e.preventDefault() unless value.length <= 16
 
 restrictExpiry = (e) ->
-  target = e.currentTarget
+  target = e.target
   digit   = String.fromCharCode(e.which)
   return unless /^\d+$/.test(digit)
 
@@ -286,7 +286,7 @@ restrictExpiry = (e) ->
   return e.preventDefault() if value.length > 6
 
 restrictCVC = (e) ->
-  target = e.currentTarget
+  target = e.target
   digit   = String.fromCharCode(e.which)
   return unless /^\d+$/.test(digit)
 
@@ -294,7 +294,7 @@ restrictCVC = (e) ->
   return e.preventDefault() unless val.length <= 4
 
 setCardType = (e) ->
-  target  = e.currentTarget
+  target  = e.target
   val      = J.val(target)
   cardType = Payment.fns.cardType(val) or 'unknown'
 

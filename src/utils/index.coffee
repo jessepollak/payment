@@ -15,9 +15,40 @@ J.val = (el, val) ->
     else
       if ret == null then "" else ret
 
-J.on = (el, ev, fn) ->
-  el.addEventListener ev, fn
-  el
+J.preventDefault = (eventObject) ->
+  if typeof eventObject.preventDefault is "function"
+    eventObject.preventDefault()
+    return
+  eventObject.returnValue = false
+  false
+
+J.normalizeEvent = (e) ->
+  original = e
+  e =
+    which: if original.which? then original.which
+    # Fallback to srcElement for ie8 support
+    target: original.target or original.srcElement
+    preventDefault: -> J.preventDefault(original)
+    originalEvent: original
+
+  if not e.which?
+    e.which = if original.charCode? then original.charCode else original.keyCode
+  return e
+
+J.on = (element, eventName, callback) ->
+  originalCallback = callback
+  callback = (e) ->
+    e = J.normalizeEvent(e)
+    originalCallback(e)
+  if element.addEventListener
+    return element.addEventListener(eventName, callback, false)
+
+  if element.attachEvent
+    eventName = "on" + eventName
+    return element.attachEvent(eventName, callback)
+
+  element['on' + eventName] = callback
+  return
 
 J.addClass = (el, className) ->
   return (J.addClass(e, className) for e in el) if el.length
