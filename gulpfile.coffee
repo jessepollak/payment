@@ -1,5 +1,7 @@
 gulp = require 'gulp'
-browserify = require 'gulp-browserify'
+browserify = require 'browserify'
+coffeeify = require 'coffeeify'
+source = require 'vinyl-source-stream'
 scss = require 'gulp-sass'
 prefix = require 'gulp-autoprefixer'
 spawn = require('child_process').spawn
@@ -15,15 +17,19 @@ runs = require 'run-sequence'
 development = process.env.NODE_ENV == 'development'
 
 gulp.task 'browserify', ->
-  gulp.src './src/payment.coffee', read: false
-    .pipe browserify
-      insertGlobals: false
+  bundler = browserify
+    entries: ['./src/payment.coffee']
+    extensions: ['.coffee']
+  bundler.transform(coffeeify)
+
+  bundler
+    .bundle(
       debug: development
-      transform: ['coffeeify']
-      extensions: ['.coffee']
-    .pipe livereload(server)
-    .pipe rename({ extname: '.js' })
-    .pipe gulp.dest('./lib/')
+      standalone: 'payment.js'
+    ).on 'error', console.log
+    .pipe(source('payment.js'))
+    .pipe(gulp.dest('lib/'))
+
 
 gulp.task 'watch', ['browserify', 'connect'],  ->
   server.listen 35729, ->
@@ -42,8 +48,10 @@ gulp.task 'clean', ->
 gulp.task 'test', ->
   gulp.src('./test')
     .pipe(mocha({ report: 'nyan', compilers: 'coffee:coffee-script/register' }))
+    .pipe(gulp.dest('.'))
 
 gulp.task 'build', (cb) ->
+  process.env.NODE_ENV = 'production'
   runs(
     'test',
     'clean',
