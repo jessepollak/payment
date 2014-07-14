@@ -15,7 +15,7 @@
   },
   "main": "lib/payment.js",
   "scripts": {
-    "test": "cake test"
+    "test": "gulp test"
   },
   "devDependencies": {
     "coffee-script": "~1.7",
