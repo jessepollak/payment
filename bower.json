@@ -1,5 +1,5 @@
 {
   "name": "payment",
   "version": "0.0.3",
-  "main": "lib/payment.js",
+  "main": "lib/payment.js"
 }
