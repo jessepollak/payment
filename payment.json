@@ -1,0 +1,26 @@
+{
+  "name": "payment",
+  "version": "0.0.1",
+  "title": "payment",
+  "description": "A general purpose library for building credit card forms, validating inputs and formatting numbers. Base on jquery.payment by @stripe, but without the jQuery.",
+  "keywords": [
+    "payment",
+    "cc",
+    "card"
+  ],
+  "author": {
+    "name": "Jesse Pollak",
+    "url": "https://twitter.com/jessepollak",
+    "email": "contact@jessepollak.me"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/jessepollak/payment/blob/master/LICENSE"
+    }
+  ],
+  "homepage": "https://github.com/jessepollak/payment",
+  "docs": "https://github.com/jessepollak/payment",
+  "bugs": "https://github.com/jessepollak/payment/issues",
+  "demo": "http://jessepollak.github.io/payment/example",
+}

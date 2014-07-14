@@ -1,0 +1,40 @@
+{
+  "name": "payment.js",
+  "version": "0.0.1",
+  "description": "A general purpose library for building credit card forms, validating inputs and formatting numbers. Base on jquery.payment by @stripe, but without the jQuery.",
+  "keywords": [
+    "payment",
+    "cc",
+    "card"
+  ],
+  "author": "Jesse Pollak",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jessepollak/payment.git"
+  },
+  "main": "lib/payment.js",
+  "scripts": {
+    "test": "cake test"
+  },
+  "devDependencies": {
+    "coffee-script": "~1.7",
+    "jsdom": "~0.10",
+    "mocha": "~1.18",
+    "gulp": "~3.8.5",
+    "gulp-browserify": "~0.5.0",
+    "gulp-sass": "~0.7.1",
+    "gulp-autoprefixer": "0.0.7",
+    "tiny-lr": "0.0.7",
+    "gulp-livereload": "~1.5.0",
+    "nodemon": "~1.1.1",
+    "coffeeify": "~0.6.0",
+    "gulp-rename": "~1.2.0",
+    "gulp-changed": "~0.3.0",
+    "gulp-rimraf": "~0.1.0",
+    "gulp-connect": "~2.0.5",
+    "gulp-open": "~0.2.8",
+    "run-sequence": "~0.3.6",
+    "gulp-mocha": "~0.5.1"
+  }
+}

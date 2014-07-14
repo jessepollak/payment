@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="../lib/payment.js"></script>
+
+  <style type="text/css" media="screen">
+    input.invalid {
+      border: 2px solid red;
+    }
+
+    .validation.failed:after {
+      color: red;
+      content: 'Validation failed';
+    }
+
+    .validation.passed:after {
+      color: green;
+      content: 'Validation passed';
+    }
+  </style>
+
+</head>
+<body>
+
+  <form novalidate autocomplete="on">
+    <h2>Card number formatting</h2>
+
+    <input type="text" class="cc-number" pattern="\d*" x-autocompletetype="cc-number" placeholder="Card number" required>
+
+    <h2>Expiry formatting</h2>
+
+    <input type="text" class="cc-exp" pattern="\d*" x-autocompletetype="cc-exp" placeholder="Expires MM/YY" required maxlength="9">
+
+    <h2>CVC formatting</h2>
+    <input type="text" class="cc-cvc" pattern="\d*" x-autocompletetype="cc-csc" placeholder="Security code" required  autocomplete="off">
+
+    <h2>Restrict Numeric</h2>
+
+    <input type="text" data-numeric>
+
+    <h2 class="validation"></h2>
+
+    <button type="submit">Submit</button>
+  </form>
+
+
+  <script>
+    var J = Payment.J,
+      numeric = document.querySelector('[data-numeric]'),
+      number = document.querySelector('.cc-number'),
+      exp = document.querySelector('.cc-exp'),
+      cvc = document.querySelector('.cc-cvc'),
+      validation = document.querySelector('.validation');
+
+    Payment.restrictNumeric(numeric);
+    Payment.formatCardNumber(number);
+    Payment.formatCardExpiry(exp);
+    Payment.formatCardCVC(cvc);
+
+    document.querySelector('form').onsubmit = function(e) {
+      e.preventDefault();
+      J.toggleClass(document.querySelectorAll('input'), 'invalid');
+      J.removeClass(validation, 'passed failed');
+
+      var cardType = Payment.fns.cardType(J.val(number));
+
+      J.toggleClass(number, 'invalid', !Payment.fns.validateCardNumber(J.val(number)));
+      J.toggleClass(exp, 'invalid', !Payment.fns.validateCardExpiry(Payment.cardExpiryVal(exp)));
+
+      J.toggleClass(cvc, 'invalid', !Payment.fns.validateCardCVC(J.val(cvc), cardType));
+
+      if (document.querySelectorAll('.invalid').length) {
+        J.addClass(validation, 'failed');
+      } else {
+        J.addClass(validation, 'passed');
+      }
+    }
+  </script>
+</body>
+</html>
