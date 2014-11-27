@@ -37,5 +37,8 @@
     "gulp-mocha": "~0.5.1",
     "browserify": "~4.2.0",
     "vinyl-source-stream": "~0.1.1"
+  },
+  "dependencies": {
+    "qj": "0.0.3"
   }
 }

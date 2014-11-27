@@ -5,7 +5,7 @@ global.window = window
 global.document = window.document
 
 Payment = require('../src/payment')
-J = require('../src/utils')
+QJ = require('qj')
 
 describe 'jquery.payment', ->
   describe 'Validating a card number', ->
@@ -232,7 +232,7 @@ describe 'jquery.payment', ->
     it 'should restrict non-number characters', ->
       number = document.createElement('input')
       number.type = 'text'
-      J.val number, '4242'
+      QJ.val number, '4242'
 
       Payment.formatCardNumber(number)
 
@@ -243,11 +243,11 @@ describe 'jquery.payment', ->
 
       number.dispatchEvent(ev)
 
-      assert.equal J.val(number), '4242'
+      assert.equal QJ.val(number), '4242'
     it 'should restrict characters when the card is number 16 characters', ->
       number = document.createElement('input')
       number.type = 'text'
-      J.val(number, '4242 4242 4242 4242')
+      QJ.val(number, '4242 4242 4242 4242')
 
       Payment.formatCardNumber(number)
 
@@ -258,11 +258,11 @@ describe 'jquery.payment', ->
 
       number.dispatchEvent(ev)
 
-      assert.equal J.val(number), '4242 4242 4242 4242'
+      assert.equal QJ.val(number), '4242 4242 4242 4242'
     it 'should format cc number correctly', ->
       number = document.createElement('input')
       number.type = 'text'
-      J.val(number, '4242')
+      QJ.val(number, '4242')
 
       Payment.formatCardNumber(number)
 
@@ -273,12 +273,12 @@ describe 'jquery.payment', ->
 
       number.dispatchEvent(ev)
 
-      assert.equal J.val(number), '4242 4'
+      assert.equal QJ.val(number), '4242 4'
 
     it 'should remove a trailing space before a number on backspace ', ->
       number = document.createElement('input')
       number.type = 'text'
-      J.val(number, '4242 ')
+      QJ.val(number, '4242 ')
       number.selectionStart = 5
 
       Payment.formatCardNumber(number)
@@ -290,11 +290,11 @@ describe 'jquery.payment', ->
 
       number.dispatchEvent(ev)
 
-      assert.equal J.val(number), '424'
+      assert.equal QJ.val(number), '424'
     it 'should remove the space after a number being deleted on a backspace', ->
       number = document.createElement('input')
       number.type = 'text'
-      J.val(number, '4242 5')
+      QJ.val(number, '4242 5')
       number.selectionStart = 6
 
       Payment.formatCardNumber(number)
@@ -306,11 +306,11 @@ describe 'jquery.payment', ->
 
       number.dispatchEvent(ev)
 
-      assert.equal J.val(number), '4242'
+      assert.equal QJ.val(number), '4242'
     it 'should set the card type correctly', ->
       number = document.createElement('input')
       number.type = 'text'
-      J.val(number, '4')
+      QJ.val(number, '4')
 
       Payment.formatCardNumber(number)
 
@@ -319,10 +319,10 @@ describe 'jquery.payment', ->
       ev.eventName = "keyup"
       number.dispatchEvent(ev)
 
-      assert J.hasClass(number, 'visa')
-      assert J.hasClass(number, 'identified')
+      assert QJ.hasClass(number, 'visa')
+      assert QJ.hasClass(number, 'identified')
 
-      J.val(number, '')
+      QJ.val(number, '')
 
       ev = document.createEvent "HTMLEvents"
       ev.initEvent "keyup", true, true
@@ -338,14 +338,14 @@ describe 'jquery.payment', ->
       #   eventCalled = true
       # assert eventCalled
 
-      assert J.hasClass(number, 'unknown')
-      assert !J.hasClass(number, 'identified')
+      assert QJ.hasClass(number, 'unknown')
+      assert !QJ.hasClass(number, 'identified')
     it 'should format correctly on paste', ->
       number = document.createElement('input')
       number.type = 'text'
       Payment.formatCardNumber(number)
 
-      J.val(number, '42424')
+      QJ.val(number, '42424')
 
       ev = document.createEvent "HTMLEvents"
       ev.initEvent "paste", true, true
@@ -356,14 +356,14 @@ describe 'jquery.payment', ->
       # must setTimeout because paste event handling is
       # done in a setTimeout
       setTimeout ->
-        assert.equal J.val(number), '4242 4'
+        assert.equal QJ.val(number), '4242 4'
 
 
   describe 'formatCardExpiry', ->
     it 'should add a slash after two numbers', ->
       expiry = document.createElement('input')
       expiry.type = "text"
-      J.val(expiry, '1')
+      QJ.val(expiry, '1')
 
       Payment.formatCardExpiry(expiry)
 
@@ -374,7 +374,7 @@ describe 'jquery.payment', ->
 
       expiry.dispatchEvent(ev)
 
-      assert.equal J.val(expiry), '11 / '
+      assert.equal QJ.val(expiry), '11 / '
     it 'should format add a 0 and slash to a number > 1 correctly', ->
       expiry = document.createElement('input')
       expiry.type = "text"
@@ -388,11 +388,11 @@ describe 'jquery.payment', ->
 
       expiry.dispatchEvent(ev)
 
-      assert.equal J.val(expiry), '04 / '
+      assert.equal QJ.val(expiry), '04 / '
     it 'should format forward slash shorthand correctly', ->
       expiry = document.createElement('input')
       expiry.type = "text"
-      J.val(expiry, '1')
+      QJ.val(expiry, '1')
 
       Payment.formatCardExpiry(expiry)
 
@@ -403,12 +403,12 @@ describe 'jquery.payment', ->
 
       expiry.dispatchEvent(ev)
 
-      assert.equal J.val(expiry), '01 / '
+      assert.equal QJ.val(expiry), '01 / '
 
     it 'should only allow numbers', ->
       expiry = document.createElement('input')
       expiry.type = "text"
-      J.val(expiry, '1')
+      QJ.val(expiry, '1')
 
       Payment.formatCardExpiry(expiry)
 
@@ -419,11 +419,11 @@ describe 'jquery.payment', ->
 
       expiry.dispatchEvent(ev)
 
-      assert.equal J.val(expiry), '1'
+      assert.equal QJ.val(expiry), '1'
     it 'should remove spaces trailing space and / after removing a number', ->
       expiry = document.createElement('input')
       expiry.type = "text"
-      J.val(expiry, '12 / 1')
+      QJ.val(expiry, '12 / 1')
 
       Payment.formatCardExpiry(expiry)
 
@@ -434,12 +434,12 @@ describe 'jquery.payment', ->
 
       expiry.dispatchEvent(ev)
 
-      assert.equal J.val(expiry), '12'
+      assert.equal QJ.val(expiry), '12'
 
     it 'should a number after removing a space and a /', ->
       expiry = document.createElement('input')
       expiry.type = "text"
-      J.val(expiry, '12 / ')
+      QJ.val(expiry, '12 / ')
 
       Payment.formatCardExpiry(expiry)
 
@@ -450,12 +450,12 @@ describe 'jquery.payment', ->
 
       expiry.dispatchEvent(ev)
 
-      assert.equal J.val(expiry), '1'
+      assert.equal QJ.val(expiry), '1'
   describe 'formatCVC', ->
     it 'should allow only numbers', ->
       cvc = document.createElement('input')
       cvc.type = "text"
-      J.val(cvc, '1')
+      QJ.val(cvc, '1')
 
       Payment.formatCardCVC(cvc)
 
@@ -466,11 +466,11 @@ describe 'jquery.payment', ->
 
       cvc.dispatchEvent(ev)
 
-      assert.equal J.val(cvc), '1'
+      assert.equal QJ.val(cvc), '1'
     it 'should restrict to length <= 4', ->
       cvc = document.createElement('input')
       cvc.type = "text"
-      J.val(cvc, '1234')
+      QJ.val(cvc, '1234')
 
       Payment.formatCardCVC(cvc)
 
@@ -481,5 +481,5 @@ describe 'jquery.payment', ->
 
       cvc.dispatchEvent(ev)
 
-      assert.equal J.val(cvc), '1234'
+      assert.equal QJ.val(cvc), '1234'
 

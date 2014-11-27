@@ -1,4 +1,4 @@
-J = require './utils'
+QJ = require 'qj'
 
 # Utils
 
@@ -117,9 +117,9 @@ hasTextSelected = (target) ->
 reFormatCardNumber = (e) ->
   setTimeout =>
     target = e.target
-    value   = J.val(target)
+    value   = QJ.val(target)
     value   = Payment.fns.formatCardNumber(value)
-    J.val(target, value)
+    QJ.val(target, value)
 
 formatCardNumber = (e) ->
   # Only format if input is a number
@@ -127,7 +127,7 @@ formatCardNumber = (e) ->
   return unless /^\d+$/.test(digit)
 
   target = e.target
-  value   = J.val(target)
+  value   = QJ.val(target)
   card    = cardFromNumber(value + digit)
   length  = (value.replace(/\D/g, '') + digit).length
 
@@ -148,16 +148,16 @@ formatCardNumber = (e) ->
   # If '4242' + 4
   if re.test(value)
     e.preventDefault()
-    J.val(target, value + ' ' + digit)
+    QJ.val(target, value + ' ' + digit)
 
   # If '424' + 2
   else if re.test(value + digit)
     e.preventDefault()
-    J.val(target, value + digit + ' ')
+    QJ.val(target, value + digit + ' ')
 
 formatBackCardNumber = (e) ->
   target = e.target
-  value   = J.val(target)
+  value   = QJ.val(target)
 
   return if e.meta
 
@@ -171,10 +171,10 @@ formatBackCardNumber = (e) ->
   # Remove the trailing space
   if /\d\s$/.test(value)
     e.preventDefault()
-    J.val(target, value.replace(/\d\s$/, ''))
+    QJ.val(target, value.replace(/\d\s$/, ''))
   else if /\s\d?$/.test(value)
     e.preventDefault()
-    J.val(target, value.replace(/\s\d?$/, ''))
+    QJ.val(target, value.replace(/\s\d?$/, ''))
 
 # Format Expiry
 
@@ -184,42 +184,42 @@ formatExpiry = (e) ->
   return unless /^\d+$/.test(digit)
 
   target = e.target
-  val     = J.val(target) + digit
+  val     = QJ.val(target) + digit
 
   if /^\d$/.test(val) and val not in ['0', '1']
     e.preventDefault()
-    J.val(target, "0#{val} / ")
+    QJ.val(target, "0#{val} / ")
 
   else if /^\d\d$/.test(val)
     e.preventDefault()
-    J.val(target, "#{val} / ")
+    QJ.val(target, "#{val} / ")
 
 formatForwardExpiry = (e) ->
   digit = String.fromCharCode(e.which)
   return unless /^\d+$/.test(digit)
 
   target = e.target
-  val     = J.val(target)
+  val     = QJ.val(target)
 
   if /^\d\d$/.test(val)
-    J.val(target, "#{val} / ")
+    QJ.val(target, "#{val} / ")
 
 formatForwardSlash = (e) ->
   slash = String.fromCharCode(e.which)
   return unless slash is '/'
 
   target = e.target
-  val     = J.val(target)
+  val     = QJ.val(target)
 
   if /^\d$/.test(val) and val isnt '0'
-    J.val(target, "0#{val} / ")
+    QJ.val(target, "0#{val} / ")
 
 formatBackExpiry = (e) ->
   # If shift+backspace is pressed
   return if e.metaKey
 
   target = e.target
-  value   = J.val(target)
+  value   = QJ.val(target)
 
   # Return unless backspacing
   return unless e.which is 8
@@ -231,10 +231,10 @@ formatBackExpiry = (e) ->
   # Remove the trailing space
   if /\d(\s|\/)+$/.test(value)
     e.preventDefault()
-    J.val(target, value.replace(/\d(\s|\/)*$/, ''))
+    QJ.val(target, value.replace(/\d(\s|\/)*$/, ''))
   else if /\s\/\s?\d?$/.test(value)
     e.preventDefault()
-    J.val(target, value.replace(/\s\/\s?\d?$/, ''))
+    QJ.val(target, value.replace(/\s\/\s?\d?$/, ''))
 
 #  Restrictions
 
@@ -264,7 +264,7 @@ restrictCardNumber = (e) ->
   return if hasTextSelected(target)
 
   # Restrict number of digits
-  value = (J.val(target) + digit).replace(/\D/g, '')
+  value = (QJ.val(target) + digit).replace(/\D/g, '')
   card  = cardFromNumber(value)
 
   if card
@@ -280,7 +280,7 @@ restrictExpiry = (e) ->
 
   return if hasTextSelected(target)
 
-  value = J.val(target) + digit
+  value = QJ.val(target) + digit
   value = value.replace(/\D/g, '')
 
   return e.preventDefault() if value.length > 6
@@ -290,23 +290,23 @@ restrictCVC = (e) ->
   digit   = String.fromCharCode(e.which)
   return unless /^\d+$/.test(digit)
 
-  val     = J.val(target) + digit
+  val     = QJ.val(target) + digit
   return e.preventDefault() unless val.length <= 4
 
 setCardType = (e) ->
   target  = e.target
-  val      = J.val(target)
+  val      = QJ.val(target)
   cardType = Payment.fns.cardType(val) or 'unknown'
 
-  unless J.hasClass(target, cardType)
+  unless QJ.hasClass(target, cardType)
     allTypes = (card.type for card in cards)
 
-    J.removeClass target, 'unknown'
-    J.removeClass target, allTypes.join(' ')
+    QJ.removeClass target, 'unknown'
+    QJ.removeClass target, allTypes.join(' ')
 
-    J.addClass target, cardType
-    J.toggleClass target, 'identified', cardType isnt 'unknown'
-    J.trigger target, 'payment.cardType', cardType
+    QJ.addClass target, cardType
+    QJ.toggleClass target, 'identified', cardType isnt 'unknown'
+    QJ.trigger target, 'payment.cardType', cardType
 
 # Public
 
@@ -342,8 +342,8 @@ class Payment
 
       return false unless month and year
 
-      month = J.trim(month)
-      year  = J.trim(year)
+      month = QJ.trim(month)
+      year  = QJ.trim(year)
 
       return false unless /^\d+$/.test(month)
       return false unless /^\d+$/.test(year)
@@ -367,7 +367,7 @@ class Payment
 
       expiry > currentTime
     validateCardCVC: (cvc, type) ->
-      cvc = J.trim(cvc)
+      cvc = QJ.trim(cvc)
       return false unless /^\d+$/.test(cvc)
 
       if type
@@ -395,30 +395,29 @@ class Payment
         groups?.shift()
         groups?.join(' ')
   @restrictNumeric: (el) ->
-    J.on el, 'keypress', restrictNumeric
+    QJ.on el, 'keypress', restrictNumeric
   @cardExpiryVal: (el) ->
-    Payment.fns.cardExpiryVal(J.val(el))
+    Payment.fns.cardExpiryVal(QJ.val(el))
   @formatCardCVC: (el) ->
     Payment.restrictNumeric el
-    J.on el, 'keypress', restrictCVC
+    QJ.on el, 'keypress', restrictCVC
     el
   @formatCardExpiry: (el) ->
     Payment.restrictNumeric el
-    J.on el, 'keypress', restrictExpiry
-    J.on el, 'keypress', formatExpiry
-    J.on el, 'keypress', formatForwardSlash
-    J.on el, 'keypress', formatForwardExpiry
-    J.on el, 'keydown', formatBackExpiry
+    QJ.on el, 'keypress', restrictExpiry
+    QJ.on el, 'keypress', formatExpiry
+    QJ.on el, 'keypress', formatForwardSlash
+    QJ.on el, 'keypress', formatForwardExpiry
+    QJ.on el, 'keydown', formatBackExpiry
     el
   @formatCardNumber: (el) ->
     Payment.restrictNumeric el
-    J.on el, 'keypress', restrictCardNumber
-    J.on el, 'keypress', formatCardNumber
-    J.on el, 'keydown', formatBackCardNumber
-    J.on el, 'keyup', setCardType
-    J.on el, 'paste', reFormatCardNumber
+    QJ.on el, 'keypress', restrictCardNumber
+    QJ.on el, 'keypress', formatCardNumber
+    QJ.on el, 'keydown', formatBackCardNumber
+    QJ.on el, 'keyup', setCardType
+    QJ.on el, 'paste', reFormatCardNumber
     el
 
-Payment.J = J
 module.exports = Payment
 global.Payment = Payment
