@@ -1,7 +1,5 @@
 QJ = require 'qj'
 
-# Utils
-
 defaultFormat = /(\d{1,4})/g
 
 cards = [
@@ -370,7 +368,7 @@ class Payment
       cvc = QJ.trim(cvc)
       return false unless /^\d+$/.test(cvc)
 
-      if type
+      if type and cardFromType(type)
         # Check against a explicit card type
         cvc.length in cardFromType(type)?.cvcLength
       else

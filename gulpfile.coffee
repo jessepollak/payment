@@ -31,12 +31,8 @@ gulp.task 'browserify', ->
     .pipe(gulp.dest('lib/'))
 
 
-gulp.task 'watch', ['browserify', 'connect'],  ->
-  server.listen 35729, ->
-    gulp.watch './src/**/*.coffee', ['browserify']
-
-  gulp.src('example/index.html')
-    .pipe open("", url: "http://localhost:8080/example")
+gulp.task 'watch', ['browserify'],  ->
+  gulp.watch './src/**/*.coffee', ['browserify']
 
 gulp.task 'connect', ->
   connect.server()
