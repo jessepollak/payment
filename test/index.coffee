@@ -50,6 +50,8 @@ describe 'jquery.payment', ->
       assert(Payment.fns.validateCardNumber('371449635398431'), 'amex')
       assert(Payment.fns.validateCardNumber('378734493671000'), 'amex')
 
+      assert(Payment.fns.validateCardNumber('5019123456789013'), 'dankort')
+
       assert(Payment.fns.validateCardNumber('30569309025904'), 'dinersclub')
       assert(Payment.fns.validateCardNumber('38520000023237'), 'dinersclub')
 
@@ -64,6 +66,8 @@ describe 'jquery.payment', ->
       assert(Payment.fns.validateCardNumber('4111111111111111'), 'visa')
       assert(Payment.fns.validateCardNumber('4012888888881881'), 'visa')
       assert(Payment.fns.validateCardNumber('4222222222222'), 'visa')
+
+      assert(Payment.fns.validateCardNumber('4917300800000000'), 'visaelectron')
 
       assert(Payment.fns.validateCardNumber('6759649826438453'), 'maestro')
 
