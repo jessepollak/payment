@@ -416,6 +416,18 @@ class Payment
     QJ.on el, 'keyup', setCardType
     QJ.on el, 'paste', reFormatCardNumber
     el
+  @getCardArray: ->
+    return cards;
+  @setCardArray: (cardArray) ->   
+    cards = cardArray;
+    return true
+  @addToCardArray: (cardObject) ->
+    cards.push(cardObject);    
+  @removeFromCardArray: (type) ->
+    for key, value of cards
+      if(value.type == type)
+        cards.splice(key, 1)
+    return true
 
 module.exports = Payment
 global.Payment = Payment
