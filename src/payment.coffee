@@ -4,11 +4,19 @@ defaultFormat = /(\d{1,4})/g
 
 cards = [
   {
-      type: 'maestro'
-      pattern: /^(5018|5020|5038|6304|6759|676[1-3])/
-      format: defaultFormat
-      length: [12..19]
-      cvcLength: [3]
+      type: 'amex'
+      pattern: /^3[47]/
+      format: /(\d{1,4})(\d{1,6})?(\d{1,5})?/
+      length: [15]
+      cvcLength: [3..4]
+      luhn: true
+  }
+  {
+      type: 'dankort',
+      pattern: /^5019/,
+      format: defaultFormat,
+      length: [16],
+      cvcLength: [3],
       luhn: true
   }
   {
@@ -16,6 +24,22 @@ cards = [
       pattern: /^(36|38|30[0-5])/
       format: defaultFormat
       length: [14]
+      cvcLength: [3]
+      luhn: true
+  }
+  {
+      type: 'discover'
+      pattern: /^(6011|65|64[4-9]|622)/
+      format: defaultFormat
+      length: [16]
+      cvcLength: [3]
+      luhn: true
+  }
+  {
+      type: 'jcb'
+      pattern: /^35/
+      format: defaultFormat
+      length: [16]
       cvcLength: [3]
       luhn: true
   }
@@ -28,8 +52,16 @@ cards = [
       luhn: true
   }
   {
-      type: 'jcb'
-      pattern: /^35/
+      type: 'maestro'
+      pattern: /^(5018|5020|5038|6304|6759|676[1-3])/
+      format: defaultFormat
+      length: [12..19]
+      cvcLength: [3]
+      luhn: true
+  }
+  {
+      type: 'mastercard'
+      pattern: /^5[1-5]/
       format: defaultFormat
       length: [16]
       cvcLength: [3]
@@ -44,27 +76,11 @@ cards = [
       luhn: false
   }
   {
-      type: 'discover'
-      pattern: /^(6011|65|64[4-9]|622)/
-      format: defaultFormat
-      length: [16]
-      cvcLength: [3]
-      luhn: true
-  }
-  {
-      type: 'mastercard'
-      pattern: /^5[1-5]/
-      format: defaultFormat
-      length: [16]
-      cvcLength: [3]
-      luhn: true
-  }
-  {
-      type: 'amex'
-      pattern: /^3[47]/
-      format: /(\d{1,4})(\d{1,6})?(\d{1,5})?/
-      length: [15]
-      cvcLength: [3..4]
+      type: 'visaelectron',
+      pattern: /^4(026|17500|405|508|844|91[37])/,
+      format: defaultFormat,
+      length: [16],
+      cvcLength: [3],
       luhn: true
   }
   {
