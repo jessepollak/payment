@@ -166,6 +166,26 @@ Payment.fns.cardExpiryVal(document.querySelector('input.cc-exp')) //=> {month: 4
 
 This function doesn't perform any validation of the month or year; use `Payment.fns.validateCardExpiry(month, year)` for that.
 
+## Card Type functions
+
+We've provided utility functions to change which card types can be identified by Payment.
+
+### Payment.getCardArray()
+
+Returns the array of card types.
+
+### Payment.setCardArray(cardTypes)
+
+Overrides the array of card types with a new array.
+
+### Payment.addToCardArray(cardType)
+
+Add a new card type to the card array.
+
+### Payment.removeFromCardArray(cardName)
+
+Remove a card type from the card array.
+
 ## Example
 
 Look in [`./example/index.html`](example/index.html)
