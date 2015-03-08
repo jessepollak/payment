@@ -120,7 +120,8 @@ hasTextSelected = (target) ->
     target.selectionStart isnt target.selectionEnd
 
   # If some text is selected in IE
-  return true if document?.selection?.createRange?().text
+  if document?.selection?.createRange?
+    return true if document.selection.createRange().text
 
   false
 
