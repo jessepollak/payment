@@ -21,31 +21,23 @@ cards = [
   }
   {
       type: 'dinersclub'
-      pattern: /^(36|38|30[0-5])/
-      format: defaultFormat
+      pattern: /^(30[0-5]|3095|36|38|39)/
+      format: /(\d{1,4})(\d{1,6})?(\d{1,4})?/
       length: [14]
       cvcLength: [3]
       luhn: true
   }
   {
       type: 'discover'
-      pattern: /^(6011|65|64[4-9]|622)/
+      pattern: /^(6011|64[4-9]|65)/
       format: defaultFormat
-      length: [16]
+      length: [16..19]
       cvcLength: [3]
       luhn: true
   }
   {
       type: 'jcb'
-      pattern: /^35/
-      format: defaultFormat
-      length: [16]
-      cvcLength: [3]
-      luhn: true
-  }
-  {
-      type: 'laser'
-      pattern: /^(6706|6771|6709)/
+      pattern: /^(352[8-9]|35[3-8])/
       format: defaultFormat
       length: [16..19]
       cvcLength: [3]
@@ -53,7 +45,7 @@ cards = [
   }
   {
       type: 'maestro'
-      pattern: /^(5018|5020|5038|6304|6759|676[1-3])/
+      pattern: /^(500[0-9]|501[0-8]|50[2-7]|508[0-4]|5[6-9]|60[0-5]|6060|61|63|64[0-3]|6[7-9])/
       format: defaultFormat
       length: [12..19]
       cvcLength: [3]
@@ -131,44 +123,69 @@ hasTextSelected = (target) ->
 
 reFormatCardNumber = (e) ->
   setTimeout =>
-    target = e.target
+    target  = e.target
     value   = QJ.val(target)
-    value   = Payment.fns.formatCardNumber(value)
-    QJ.val(target, value)
+
+    # clear the value
+    QJ.val target, ''
+
+    # Iterate over the string and simulate
+    # key event to trigger formatCardNumber
+    for char,idx in value
+      code = char.charCodeAt(0)
+
+      keyEvent = document.createEvent 'KeyboardEvent'
+
+      # Chrome hack to enable keyCode setting
+      Object.defineProperty keyEvent, 'keyCode', get: -> @keyCodeVal
+      Object.defineProperty keyEvent, 'which', get: -> @keyCodeVal
+
+      if keyEvent.initKeyEvent
+        keyEvent.initKeyEvent 'keypress', true, true, window, false, false, false, false, code, code
+      else
+        keyEvent.initKeyboardEvent 'keypress', true, true, document.defaultView, false, false, false, false, code, code
+
+        keyEvent.keyCodeVal = code
+
+      # Trigger the event
+      target.dispatchEvent keyEvent
+
+    # Trigger keyup, thus triggering detection
+    QJ.trigger target, 'keyup'
 
 formatCardNumber = (e) ->
   # Only format if input is a number
   digit = String.fromCharCode(e.which)
   return unless /^\d+$/.test(digit)
 
-  target = e.target
+  target  = e.target
   value   = QJ.val(target)
   card    = cardFromNumber(value + digit)
   length  = (value.replace(/\D/g, '') + digit).length
 
   upperLength = 16
   upperLength = card.length[card.length.length - 1] if card
-  return if length >= upperLength
+  return if length > upperLength
 
   # Return if focus isn't at the end of the text
   return if target.selectionStart? and
     target.selectionStart isnt value.length
 
-  if card && card.type is 'amex'
-    # Amex cards are formatted differently
-    re = /^(\d{4}|\d{4}\s\d{6})$/
-  else
-    re = /(?:^|\s)(\d{4})$/
+  value = (value + digit).replace /[^\d]/g, ''
 
-  # If '4242' + 4
-  if re.test(value)
-    e.preventDefault()
-    QJ.val(target, value + ' ' + digit)
+  switch length
+    when 13 then re = /(\d{6})(\d{4})(\d{3})/
+    when 14 then re = /(\d{4})(\d{6})(\d{4})/
+    when 15 then re = /(\d{4})(\d{6})(\d{5})/
+    when 17 then re = /(\d{4})(\d{4})(\d{4})(\d{4})(\d{1})/
+    when 18 then re = /(\d{4})(\d{4})(\d{4})(\d{6})/
+    when 19 then re = /(\d{6})(\d{13})/
+    else re = /(\d{4})/
 
-  # If '424' + 2
-  else if re.test(value + digit)
-    e.preventDefault()
-    QJ.val(target, value + digit + ' ')
+  e.preventDefault()
+
+  # Note: filter is not available in IE8
+  QJ.val target, value.split(re).filter((val) -> val.length isnt 0).join(' ')
 
 formatBackCardNumber = (e) ->
   target = e.target
