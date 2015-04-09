@@ -85,6 +85,10 @@ cards = [
   }
 ]
 
+# Store HTML elements (passed onto formatters)
+# for re-use by other methods
+elements = []
+
 cardFromNumber = (num) ->
   num = (num + '').replace(/\D/g, '')
   return card for card in cards when card.pattern.test(num)
@@ -289,7 +293,7 @@ restrictNumeric = (e) ->
   return e.preventDefault() if !/[\d\s]/.test(input)
 
 restrictCardNumber = (e) ->
-  target = e.target
+  target  = e.target
   digit   = String.fromCharCode(e.which)
   return unless /^\d+$/.test(digit)
 
@@ -306,7 +310,7 @@ restrictCardNumber = (e) ->
     e.preventDefault() unless value.length <= 16
 
 restrictExpiry = (e) ->
-  target = e.target
+  target  = e.target
   digit   = String.fromCharCode(e.which)
   return unless /^\d+$/.test(digit)
 
@@ -318,12 +322,31 @@ restrictExpiry = (e) ->
   return e.preventDefault() if value.length > 6
 
 restrictCVC = (e) ->
-  target = e.target
+  target  = e.target
   digit   = String.fromCharCode(e.which)
   return unless /^\d+$/.test(digit)
 
+  numberEl = Payment.getElement 'number'
+
+  if numberEl
+    cardNumber = ''
+
+    # Expecting a NodeList and concat
+    # the values of all elements
+    for el in numberEl
+      cardNumber += QJ.val el
+
+    cardObj = cardFromNumber(cardNumber)
+
+    if cardObj
+      cvcLength = Math.max.apply Math, cardObj.cvcLength
+    else
+      cvcLength = 4
+  else
+    cvcLength = 4
+
   val     = QJ.val(target) + digit
-  return e.preventDefault() unless val.length <= 4
+  return e.preventDefault() unless val.length <= cvcLength
 
 setCardType = (e) ->
   target  = e.target
@@ -433,6 +456,7 @@ class Payment
   @formatCardCVC: (el) ->
     Payment.restrictNumeric el
     QJ.on el, 'keypress', restrictCVC
+    @storeElement 'cvc', el
     el
   @formatCardExpiry: (el) ->
     Payment.restrictNumeric el
@@ -441,6 +465,7 @@ class Payment
     QJ.on el, 'keypress', formatForwardSlash
     QJ.on el, 'keypress', formatForwardExpiry
     QJ.on el, 'keydown', formatBackExpiry
+    @storeElement 'expiry', el
     el
   @formatCardNumber: (el) ->
     Payment.restrictNumeric el
@@ -449,18 +474,22 @@ class Payment
     QJ.on el, 'keydown', formatBackCardNumber
     QJ.on el, 'keyup', setCardType
     QJ.on el, 'paste', reFormatCardNumber
+    @storeElement 'number', el
     el
-  @getCardArray: -> return cards
+
+  @getCardArray: ->
+    cards
   @setCardArray: (cardArray) ->
     cards = cardArray
-    return true
   @addToCardArray: (cardObject) ->
     cards.push(cardObject)
   @removeFromCardArray: (type) ->
-    for key, value of cards
-      if(value.type == type)
-        cards.splice(key, 1)
-    return true
+    cards.splice key, 1 for key, value of cards when value.type is type
+
+  @getElement: (name) ->
+    elements["#{name}"]
+  @storeElement: (name, el) ->
+    elements["#{name}"] = el
 
 module.exports = Payment
 global.Payment = Payment
