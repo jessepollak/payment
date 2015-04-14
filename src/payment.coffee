@@ -138,21 +138,33 @@ reFormatCardNumber = (e) ->
     for char,idx in value
       code = char.charCodeAt(0)
 
-      keyEvent = document.createEvent 'KeyboardEvent'
-
-      # Chrome hack to enable keyCode setting
-      Object.defineProperty keyEvent, 'keyCode', get: -> @keyCodeVal
-      Object.defineProperty keyEvent, 'which', get: -> @keyCodeVal
-
-      if keyEvent.initKeyEvent
+      # Firefox
+      try
+        keyEvent = document.createEvent 'KeyEvents'
         keyEvent.initKeyEvent 'keypress', true, true, window, false, false, false, false, code, code
-      else
-        keyEvent.initKeyboardEvent 'keypress', true, true, document.defaultView, false, false, false, false, code, code
+      catch FirefoxException
+        console.log 'Unable to create KeyEvents event:' + FirefoxException.message
 
-        keyEvent.keyCodeVal = code
+        # Chromium
+        try
+          keyEvent = document.createEvent 'KeyboardEvent'
 
-      # Trigger the event
-      target.dispatchEvent keyEvent
+          Object.defineProperty keyEvent, 'keyCode', get: -> @keyCodeVal
+          Object.defineProperty keyEvent, 'which', get: -> @keyCodeVal
+
+          keyEvent.initKeyboardEvent 'keypress', true, true, document.defaultView, false, false, false, false, code, code
+
+          keyEvent.keyCodeVal = code
+        catch ChromeException
+          console.log 'Unable to create KeyboardEvent event: ' + ChromeException.message
+
+      if keyEvent
+        target.dispatchEvent keyEvent
+      else if document.createEventObject
+        # IE
+        keyEvent = document.createEventObject 'KeyboardEvent'
+        keyEvent.keyCode = code
+        target.fireEvent 'onkeyup', keyEvent
 
     # Trigger keyup, thus triggering detection
     QJ.trigger target, 'keyup'
