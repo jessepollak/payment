@@ -2,7 +2,6 @@ gulp = require 'gulp'
 browserify = require 'browserify'
 coffeeify = require 'coffeeify'
 source = require 'vinyl-source-stream'
-scss = require 'gulp-sass'
 prefix = require 'gulp-autoprefixer'
 spawn = require('child_process').spawn
 server = require('tiny-lr')()

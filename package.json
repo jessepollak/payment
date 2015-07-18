@@ -22,7 +22,6 @@
     "jsdom": "~0.10",
     "mocha": "~1.18",
     "gulp": "~3.8.5",
-    "gulp-sass": "~0.7.1",
     "gulp-autoprefixer": "0.0.7",
     "tiny-lr": "0.0.7",
     "gulp-livereload": "~1.5.0",
