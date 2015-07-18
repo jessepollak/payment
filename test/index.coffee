@@ -151,9 +151,9 @@ describe 'jquery.payment', ->
       topic = Payment.fns.validateCardCVC('123')
       assert.equal topic, true
 
-    it 'should validate a three digit number with card type amex', ->
+    it 'should not validate a three digit number with card type amex', ->
       topic = Payment.fns.validateCardCVC('123', 'amex')
-      assert.equal topic, true
+      assert.equal topic, false
 
     it 'should validate a three digit number with card type other than amex', ->
       topic = Payment.fns.validateCardCVC('123', 'visa')
