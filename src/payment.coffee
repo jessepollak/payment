@@ -1,4 +1,4 @@
-QJ = require 'qj/src/qj'
+QJ = require 'qj/src/qj.coffee'
 
 defaultFormat = /(\d{1,4})/g
 

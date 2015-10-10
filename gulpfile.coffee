@@ -19,13 +19,12 @@ gulp.task 'browserify', ->
   bundler = browserify
     entries: ['./src/payment.coffee']
     extensions: ['.coffee']
+    debug: development
+    standalone: 'payment.js'
   bundler.transform(coffeeify)
 
   bundler
-    .bundle(
-      debug: development
-      standalone: 'payment.js'
-    ).on 'error', console.log
+    .bundle().on 'error', console.log
     .pipe(source('payment.js'))
     .pipe(gulp.dest('lib/'))
 
