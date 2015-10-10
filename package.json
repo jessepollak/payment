@@ -17,6 +17,11 @@
   "scripts": {
     "test": "gulp test"
   },
+  "browserify": {
+    "transform": [
+      "coffeeify"
+    ]
+  },
   "devDependencies": {
     "coffee-script": "~1.10",
     "jsdom": "~6.5",

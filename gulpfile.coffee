@@ -21,7 +21,6 @@ gulp.task 'browserify', ->
     extensions: ['.coffee']
     debug: development
     standalone: 'payment.js'
-  bundler.transform(coffeeify)
 
   bundler
     .bundle().on 'error', console.log
