@@ -209,6 +209,21 @@ formatExpiry = (e) ->
     e.preventDefault()
     QJ.val(target, "#{val} / ")
 
+formatMonthExpiry = (e) ->
+  digit = String.fromCharCode(e.which)
+  return unless /^\d+$/.test(digit)
+
+  target = e.target
+  val     = QJ.val(target) + digit
+
+  if /^\d$/.test(val) and val not in ['0', '1']
+    e.preventDefault()
+    QJ.val(target, "0#{val}")
+
+  else if /^\d\d$/.test(val)
+    e.preventDefault()
+    QJ.val(target, "#{val}")
+
 formatForwardExpiry = (e) ->
   digit = String.fromCharCode(e.which)
   return unless /^\d+$/.test(digit)
@@ -288,7 +303,7 @@ restrictCardNumber = (e) ->
     # All other cards are 16 digits long
     e.preventDefault() unless value.length <= 16
 
-restrictExpiry = (e) ->
+restrictExpiry = (e, length) ->
   target = e.target
   digit   = String.fromCharCode(e.which)
   return unless /^\d+$/.test(digit)
@@ -298,7 +313,16 @@ restrictExpiry = (e) ->
   value = QJ.val(target) + digit
   value = value.replace(/\D/g, '')
 
-  return e.preventDefault() if value.length > 6
+  return e.preventDefault() if value.length > length
+
+restrictCombinedExpiry = (e) ->
+  return restrictExpiry e, 6
+
+restrictMonthExpiry = (e) ->
+  return restrictExpiry e, 2
+
+restrictYearExpiry = (e) ->
+  return restrictExpiry e, 4
 
 restrictCVC = (e) ->
   target = e.target
@@ -419,12 +443,20 @@ class Payment
     el
   @formatCardExpiry: (el) ->
     Payment.restrictNumeric el
-    QJ.on el, 'keypress', restrictExpiry
-    QJ.on el, 'keypress', formatExpiry
-    QJ.on el, 'keypress', formatForwardSlash
-    QJ.on el, 'keypress', formatForwardExpiry
-    QJ.on el, 'keydown', formatBackExpiry
+    if el.length && el.length == 2
+      [month, year] = el
+      @formatCardExpiryMultiple month, year
+    else
+      QJ.on el, 'keypress', restrictCombinedExpiry
+      QJ.on el, 'keypress', formatExpiry
+      QJ.on el, 'keypress', formatForwardSlash
+      QJ.on el, 'keypress', formatForwardExpiry
+      QJ.on el, 'keydown', formatBackExpiry
     el
+  @formatCardExpiryMultiple: (month, year) ->
+    QJ.on month, 'keypress', restrictMonthExpiry
+    QJ.on month, 'keypress', formatMonthExpiry
+    QJ.on year, 'keypress', restrictYearExpiry
   @formatCardNumber: (el) ->
     Payment.restrictNumeric el
     QJ.on el, 'keypress', restrictCardNumber
