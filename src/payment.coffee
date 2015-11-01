@@ -329,6 +329,8 @@ restrictCVC = (e) ->
   digit   = String.fromCharCode(e.which)
   return unless /^\d+$/.test(digit)
 
+  return if hasTextSelected(target)
+
   val     = QJ.val(target) + digit
   return e.preventDefault() unless val.length <= 4
 
