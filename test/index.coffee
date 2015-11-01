@@ -393,6 +393,22 @@ describe 'jquery.payment', ->
       expiry.dispatchEvent(ev)
 
       assert.equal QJ.val(expiry), '04 / '
+    it 'should format add a 0 to a number > 1 in the month input correctly', ->
+      month = document.createElement('input')
+      month.type = "text"
+      year = document.createElement('input')
+      year.type = "text"
+
+      Payment.formatCardExpiry([month, year])
+
+      ev = document.createEvent "HTMLEvents"
+      ev.initEvent "keypress", true, true
+      ev.eventName = "keypress"
+      ev.which = "4".charCodeAt(0)
+
+      month.dispatchEvent(ev)
+
+      assert.equal QJ.val(month), '04'
     it 'should format forward slash shorthand correctly', ->
       expiry = document.createElement('input')
       expiry.type = "text"
@@ -455,6 +471,59 @@ describe 'jquery.payment', ->
       expiry.dispatchEvent(ev)
 
       assert.equal QJ.val(expiry), '1'
+    it 'should restrict combined expiry fields to length <= 6 digits', ->
+      expiry = document.createElement('input')
+      expiry.type = "text"
+      QJ.val(expiry, '12 / 2018')
+
+      Payment.formatCardExpiry(expiry)
+
+      ev = document.createEvent "HTMLEvents"
+      ev.initEvent "keypress", true, true
+      ev.eventName = "keypress"
+      ev.which = "1".charCodeAt(0)
+
+      expiry.dispatchEvent(ev)
+
+      assert.equal QJ.val(expiry), '12 / 2018'
+    it 'should restrict month expiry fields to length <= 2 digits', ->
+      month = document.createElement('input')
+      month.type = "text"
+      QJ.val(month, '12')
+
+      year = document.createElement('input')
+      year.type = "text"
+      QJ.val(year, '2018')
+
+      Payment.formatCardExpiryMultiple(month, year)
+
+      ev = document.createEvent "HTMLEvents"
+      ev.initEvent "keypress", true, true
+      ev.eventName = "keypress"
+      ev.which = "1".charCodeAt(0)
+
+      month.dispatchEvent(ev)
+
+      assert.equal QJ.val(month), '12'
+    it 'should restrict year expiry fields to length <= 4 digits', ->
+      month = document.createElement('input')
+      month.type = "text"
+      QJ.val(month, '12')
+
+      year = document.createElement('input')
+      year.type = "text"
+      QJ.val(year, '2018')
+
+      Payment.formatCardExpiryMultiple(month, year)
+
+      ev = document.createEvent "HTMLEvents"
+      ev.initEvent "keypress", true, true
+      ev.eventName = "keypress"
+      ev.which = "1".charCodeAt(0)
+
+      year.dispatchEvent(ev)
+
+      assert.equal QJ.val(year), '2018'
   describe 'formatCVC', ->
     it 'should allow only numbers', ->
       cvc = document.createElement('input')
