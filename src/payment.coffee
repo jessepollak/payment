@@ -4,6 +4,14 @@ defaultFormat = /(\d{1,4})/g
 
 cards = [
   {
+      type: 'elo',
+      pattern: /^6[636368|438935|504175|451416|636297|5067|4576|4011]/,
+      format: defaultFormat,
+      length: [16],
+      cvcLength: [3],
+      luhn: true
+  }
+  {
       type: 'amex'
       pattern: /^3[47]/
       format: /(\d{1,4})(\d{1,6})?(\d{1,5})?/
