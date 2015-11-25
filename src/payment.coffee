@@ -91,6 +91,14 @@ cards = [
       cvcLength: [3]
       luhn: true
   }
+  {
+      type: 'elo'
+      pattern: /^(4011|4389|45(14|76)|50(41|67|90)|63(62|63))(1|[3-7]|9)[0-9]/
+      format: defaultFormat
+      length: [16]
+      cvcLength: [3]
+      luhn: true
+  }
 ]
 
 cardFromNumber = (num) ->
