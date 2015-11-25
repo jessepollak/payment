@@ -32,6 +32,7 @@ Supported card types are:
 * Maestro
 * Laser
 * UnionPay
+* Elo
 
 ## API
 
@@ -50,7 +51,7 @@ Example:
 Payment.formatCardNumber(document.querySelector('input.cc-num'));
 ```
 
-### Payment.formatCardExpiry 
+### Payment.formatCardExpiry
 
 Formats card expiry:
 
@@ -145,6 +146,7 @@ Returns a card type. Either:
 * `maestro`
 * `laser`
 * `unionpay`
+* `elo`
 
 The function will return `null` if the card type can't be determined.
 
