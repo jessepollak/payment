@@ -7,7 +7,7 @@ global.document = window.document
 Payment = require('../src/payment')
 QJ = require('qj')
 
-describe 'jquery.payment', ->
+describe 'payment', ->
   describe 'Validating a card number', ->
     it 'should fail if empty', ->
       topic = Payment.fns.validateCardNumber ''
