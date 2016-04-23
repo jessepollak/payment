@@ -110,6 +110,11 @@ describe 'jquery.payment', ->
 
     it 'that has an invalid month', ->
       currentTime = new Date()
+      topic = Payment.fns.validateCardExpiry 0, currentTime.getFullYear()
+      assert.equal topic, false
+
+    it 'that has an invalid month', ->
+      currentTime = new Date()
       topic = Payment.fns.validateCardExpiry 13, currentTime.getFullYear()
       assert.equal topic, false
 

@@ -396,7 +396,10 @@ class Payment
 
       return false unless /^\d+$/.test(month)
       return false unless /^\d+$/.test(year)
-      return false unless parseInt(month, 10) <= 12
+
+      month = parseInt(month, 10)
+
+      return false unless month and month <= 12
 
       if year.length is 2
         prefix = (new Date).getFullYear()
