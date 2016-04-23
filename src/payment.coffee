@@ -123,13 +123,16 @@ luhnCheck = (num) ->
   sum % 10 == 0
 
 hasTextSelected = (target) ->
-  # If some text is selected
-  return true if target.selectionStart? and
-    target.selectionStart isnt target.selectionEnd
+  try
+    # If some text is selected
+    return true if target.selectionStart? and
+      target.selectionStart isnt target.selectionEnd
 
-  # If some text is selected in IE
-  if document?.selection?.createRange?
-    return true if document.selection.createRange().text
+    # If some text is selected in IE
+    if document?.selection?.createRange?
+      return true if document.selection.createRange().text
+  catch e
+    false
 
   false
 
@@ -159,8 +162,7 @@ formatCardNumber = (e) ->
   return if length >= upperLength
 
   # Return if focus isn't at the end of the text
-  return if target.selectionStart? and
-    target.selectionStart isnt value.length
+  return if hasTextSelected(target)
 
   if card && card.type is 'amex'
     # Amex cards are formatted differently
@@ -188,8 +190,7 @@ formatBackCardNumber = (e) ->
   return unless e.which is 8
 
   # Return if focus isn't at the end of the text
-  return if target.selectionStart? and
-    target.selectionStart isnt value.length
+  return if hasTextSelected(target)
 
   # Remove the trailing space
   if /\d\s$/.test(value)
@@ -263,8 +264,7 @@ formatBackExpiry = (e) ->
   return unless e.which is 8
 
   # Return if focus isn't at the end of the text
-  return if target.selectionStart? and
-    target.selectionStart isnt value.length
+  return if hasTextSelected(target)
 
   # Remove the trailing space
   if /\d(\s|\/)+$/.test(value)
