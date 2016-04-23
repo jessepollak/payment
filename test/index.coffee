@@ -202,6 +202,10 @@ describe 'payment', ->
       topic = Payment.fns.cardType '3412121212121212'
       assert.equal topic, 'amex'
 
+    it 'that begins with 457393 should return Elo', ->
+      topic = Payment.fns.cardType '4573931212121212'
+      assert.equal topic, 'elo'
+
     it 'that is not numbers should return null', ->
       topic = Payment.fns.cardType 'aoeu'
       assert.equal topic, null
@@ -231,6 +235,9 @@ describe 'payment', ->
       assert.equal(Payment.fns.cardType('4222222222222'), 'visa')
 
       assert.equal(Payment.fns.cardType('6759649826438453'), 'maestro')
+      
+      assert.equal(Payment.fns.cardType('6363689826438453'), 'elo')
+      assert.equal(Payment.fns.cardType('6362979826438453'), 'elo')
 
       assert.equal(Payment.fns.cardType('6271136264806203568'), 'unionpay')
       assert.equal(Payment.fns.cardType('6236265930072952775'), 'unionpay')
