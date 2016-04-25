@@ -260,21 +260,36 @@ describe 'payment', ->
       number.dispatchEvent(ev)
 
       assert.equal QJ.val(number), '4242'
-    it 'should restrict characters when the card is number 16 characters', ->
+    it 'should restrict characters when a generic card number is 16 characters', ->
       number = document.createElement('input')
       number.type = 'text'
-      QJ.val(number, '4242 4242 4242 4242')
+      QJ.val(number, '0000 0000 0000 0000')
 
       Payment.formatCardNumber(number)
 
       ev = document.createEvent "HTMLEvents"
       ev.initEvent "keypress", true, true
       ev.eventName = "keypress"
-      ev.which = "4".charCodeAt(0)
+      ev.which = "0".charCodeAt(0)
 
       number.dispatchEvent(ev)
 
-      assert.equal QJ.val(number), '4242 4242 4242 4242'
+      assert.equal QJ.val(number), '0000 0000 0000 0000'
+    it 'should restrict characters when a visa card number is greater than 19 characters', ->
+      number = document.createElement('input')
+      number.type = 'text'
+      QJ.val(number, '4000 0000 0000 0000 030')
+
+      Payment.formatCardNumber(number)
+
+      ev = document.createEvent "HTMLEvents"
+      ev.initEvent "keypress", true, true
+      ev.eventName = "keypress"
+      ev.which = "0".charCodeAt(0)
+
+      number.dispatchEvent(ev)
+
+      assert.equal QJ.val(number), '4000 0000 0000 0000 030'
     it 'should format cc number correctly', ->
       number = document.createElement('input')
       number.type = 'text'
