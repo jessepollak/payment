@@ -296,6 +296,7 @@ describe 'payment', ->
       number.type = 'text'
       QJ.val(number, '4242 ')
       number.selectionStart = 5
+      number.selectionEnd = 5
 
       Payment.formatCardNumber(number)
 
@@ -312,6 +313,7 @@ describe 'payment', ->
       number.type = 'text'
       QJ.val(number, '4242 5')
       number.selectionStart = 6
+      number.selectionEnd = 6
 
       Payment.formatCardNumber(number)
 
