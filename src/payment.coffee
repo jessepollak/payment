@@ -85,7 +85,7 @@ cards = [
   }
   {
       type: 'elo'
-      pattern: /^4011|438935|45(1416|76)|50(4175|6699|67|90[4-7])|63(6297|6368)/
+      pattern: /^4011|438935|45(1416|76|7393)|50(4175|6699|67|90[4-7])|63(6297|6368)/,
       format: defaultFormat
       length: [16]
       cvcLength: [3]
@@ -95,7 +95,7 @@ cards = [
       type: 'visa'
       pattern: /^4/
       format: defaultFormat
-      length: [13, 16]
+      length: [13, 16, 19]
       cvcLength: [3]
       luhn: true
   }
@@ -123,13 +123,16 @@ luhnCheck = (num) ->
   sum % 10 == 0
 
 hasTextSelected = (target) ->
-  # If some text is selected
-  return true if target.selectionStart? and
-    target.selectionStart isnt target.selectionEnd
+  try
+    # If some text is selected
+    return true if target.selectionStart? and
+      target.selectionStart isnt target.selectionEnd
 
-  # If some text is selected in IE
-  if document?.selection?.createRange?
-    return true if document.selection.createRange().text
+    # If some text is selected in IE
+    if document?.selection?.createRange?
+      return true if document.selection.createRange().text
+  catch e
+    false
 
   false
 
@@ -160,8 +163,7 @@ formatCardNumber = (e) ->
   return if length >= upperLength
 
   # Return if focus isn't at the end of the text
-  return if target.selectionStart? and
-    target.selectionStart isnt value.length
+  return if hasTextSelected(target)
 
   if card && card.type is 'amex'
     # Amex cards are formatted differently
@@ -189,8 +191,7 @@ formatBackCardNumber = (e) ->
   return unless e.which is 8
 
   # Return if focus isn't at the end of the text
-  return if target.selectionStart? and
-    target.selectionStart isnt value.length
+  return if hasTextSelected(target)
 
   # Remove the trailing space
   if /\d\s$/.test(value)
@@ -264,8 +265,7 @@ formatBackExpiry = (e) ->
   return unless e.which is 8
 
   # Return if focus isn't at the end of the text
-  return if target.selectionStart? and
-    target.selectionStart isnt value.length
+  return if hasTextSelected(target)
 
   # Remove the trailing space
   if /\d(\s|\/)+$/.test(value)
@@ -397,7 +397,10 @@ class Payment
 
       return false unless /^\d+$/.test(month)
       return false unless /^\d+$/.test(year)
-      return false unless parseInt(month, 10) <= 12
+
+      month = parseInt(month, 10)
+
+      return false unless month and month <= 12
 
       if year.length is 2
         prefix = (new Date).getFullYear()

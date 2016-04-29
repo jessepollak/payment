@@ -7,7 +7,7 @@ global.document = window.document
 Payment = require('../src/payment')
 QJ = require('qj')
 
-describe 'jquery.payment', ->
+describe 'payment', ->
   describe 'Validating a card number', ->
     it 'should fail if empty', ->
       topic = Payment.fns.validateCardNumber ''
@@ -110,6 +110,11 @@ describe 'jquery.payment', ->
 
     it 'that has an invalid month', ->
       currentTime = new Date()
+      topic = Payment.fns.validateCardExpiry 0, currentTime.getFullYear()
+      assert.equal topic, false
+
+    it 'that has an invalid month', ->
+      currentTime = new Date()
       topic = Payment.fns.validateCardExpiry 13, currentTime.getFullYear()
       assert.equal topic, false
 
@@ -197,6 +202,10 @@ describe 'jquery.payment', ->
       topic = Payment.fns.cardType '3412121212121212'
       assert.equal topic, 'amex'
 
+    it 'that begins with 457393 should return Elo', ->
+      topic = Payment.fns.cardType '4573931212121212'
+      assert.equal topic, 'elo'
+
     it 'that is not numbers should return null', ->
       topic = Payment.fns.cardType 'aoeu'
       assert.equal topic, null
@@ -226,6 +235,9 @@ describe 'jquery.payment', ->
       assert.equal(Payment.fns.cardType('4222222222222'), 'visa')
 
       assert.equal(Payment.fns.cardType('6759649826438453'), 'maestro')
+      
+      assert.equal(Payment.fns.cardType('6363689826438453'), 'elo')
+      assert.equal(Payment.fns.cardType('6362979826438453'), 'elo')
 
       assert.equal(Payment.fns.cardType('6271136264806203568'), 'unionpay')
       assert.equal(Payment.fns.cardType('6236265930072952775'), 'unionpay')
@@ -248,21 +260,36 @@ describe 'jquery.payment', ->
       number.dispatchEvent(ev)
 
       assert.equal QJ.val(number), '4242'
-    it 'should restrict characters when the card is number 16 characters', ->
+    it 'should restrict characters when a generic card number is 16 characters', ->
       number = document.createElement('input')
       number.type = 'text'
-      QJ.val(number, '4242 4242 4242 4242')
+      QJ.val(number, '0000 0000 0000 0000')
 
       Payment.formatCardNumber(number)
 
       ev = document.createEvent "HTMLEvents"
       ev.initEvent "keypress", true, true
       ev.eventName = "keypress"
-      ev.which = "4".charCodeAt(0)
+      ev.which = "0".charCodeAt(0)
 
       number.dispatchEvent(ev)
 
-      assert.equal QJ.val(number), '4242 4242 4242 4242'
+      assert.equal QJ.val(number), '0000 0000 0000 0000'
+    it 'should restrict characters when a visa card number is greater than 19 characters', ->
+      number = document.createElement('input')
+      number.type = 'text'
+      QJ.val(number, '4000 0000 0000 0000 030')
+
+      Payment.formatCardNumber(number)
+
+      ev = document.createEvent "HTMLEvents"
+      ev.initEvent "keypress", true, true
+      ev.eventName = "keypress"
+      ev.which = "0".charCodeAt(0)
+
+      number.dispatchEvent(ev)
+
+      assert.equal QJ.val(number), '4000 0000 0000 0000 030'
     it 'should format cc number correctly', ->
       number = document.createElement('input')
       number.type = 'text'
@@ -284,6 +311,7 @@ describe 'jquery.payment', ->
       number.type = 'text'
       QJ.val(number, '4242 ')
       number.selectionStart = 5
+      number.selectionEnd = 5
 
       Payment.formatCardNumber(number)
 
@@ -300,6 +328,7 @@ describe 'jquery.payment', ->
       number.type = 'text'
       QJ.val(number, '4242 5')
       number.selectionStart = 6
+      number.selectionEnd = 6
 
       Payment.formatCardNumber(number)
 

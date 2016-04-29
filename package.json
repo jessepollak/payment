@@ -1,6 +1,6 @@
 {
   "name": "payment",
-  "version": "0.0.12",
+  "version": "1.0.3",
   "description": "A general purpose library for building credit card forms, validating inputs and formatting numbers. Base on jquery.payment by @stripe, but without the jQuery.",
   "keywords": [
     "payment",
@@ -42,7 +42,7 @@
     "vinyl-source-stream": "~1.1.0"
   },
   "dependencies": {
-    "qj": "0.0.8",
+    "qj": "~1.0.0",
     "coffeeify": "^1.1.0"
   }
 }
