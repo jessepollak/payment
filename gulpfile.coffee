@@ -40,7 +40,7 @@ gulp.task 'clean', ->
 
 gulp.task 'test', ->
   gulp.src('./test')
-    .pipe(mocha({ report: 'nyan', compilers: 'coffee:coffee-script/register' }))
+    .pipe(mocha({ reporter: 'nyan', compilers: 'coffee:coffee-script/register' }))
     .pipe(gulp.dest('.'))
 
 gulp.task 'build', (cb) ->
