@@ -66,10 +66,17 @@ describe 'payment', ->
       assert(Payment.fns.validateCardNumber('4111111111111111'), 'visa')
       assert(Payment.fns.validateCardNumber('4012888888881881'), 'visa')
       assert(Payment.fns.validateCardNumber('4222222222222'), 'visa')
+      assert(Payment.fns.validateCardNumber('4000 0000 0000 0000 030'), 'visa')
 
       assert(Payment.fns.validateCardNumber('4917300800000000'), 'visaelectron')
 
       assert(Payment.fns.validateCardNumber('6759649826438453'), 'maestro')
+      assert(Payment.fns.validateCardNumber('6759 4111 0000 0008'), 'maestro');
+      assert(Payment.fns.validateCardNumber('6759 6498 2643 8453'), 'maestro');
+      assert(Payment.fns.validateCardNumber('5600 0022 7571 4803 02'), 'maestro');
+      assert(Payment.fns.validateCardNumber('6772 5598 7654 3210 120'), 'maestro');
+      assert(Payment.fns.validateCardNumber('5600 0022 7571 4803 02'), 'maestro');
+      assert(Payment.fns.validateCardNumber('6772 5598 7654 3210 120'), 'maestro');
 
       assert(Payment.fns.validateCardNumber('6271136264806203568'), 'unionpay')
       assert(Payment.fns.validateCardNumber('6236265930072952775'), 'unionpay')
@@ -235,7 +242,7 @@ describe 'payment', ->
       assert.equal(Payment.fns.cardType('4222222222222'), 'visa')
 
       assert.equal(Payment.fns.cardType('6759649826438453'), 'maestro')
-      
+
       assert.equal(Payment.fns.cardType('6363689826438453'), 'elo')
       assert.equal(Payment.fns.cardType('6362979826438453'), 'elo')
 
@@ -584,4 +591,3 @@ describe 'payment', ->
       cvc.dispatchEvent(ev)
 
       assert.equal QJ.val(cvc), '1234'
-
