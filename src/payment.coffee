@@ -175,11 +175,13 @@ formatCardNumber = (e) ->
   if re.test(value)
     e.preventDefault()
     QJ.val(target, value + ' ' + digit)
+    QJ.trigger(target, 'change')
 
   # If '424' + 2
   else if re.test(value + digit)
     e.preventDefault()
     QJ.val(target, value + digit + ' ')
+    QJ.trigger(target, 'change')
 
 formatBackCardNumber = (e) ->
   target = e.target
