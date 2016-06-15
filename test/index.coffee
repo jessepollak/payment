@@ -63,6 +63,7 @@ describe 'payment', ->
       assert(Payment.fns.validateCardNumber('3566002020360505'), 'jcb')
     it 'should validate mastercard card types', ->
       assert(Payment.fns.validateCardNumber('5555555555554444'), 'mastercard')
+      assert(Payment.fns.validateCardNumber('2221000010000015'), 'mastercard')
     it 'should validate visa card types', ->
       assert(Payment.fns.validateCardNumber('4111111111111111'), 'visa')
       assert(Payment.fns.validateCardNumber('4012888888881881'), 'visa')
@@ -202,6 +203,10 @@ describe 'payment', ->
       topic = Payment.fns.cardType '5555555555554444'
       assert.equal topic, 'mastercard'
 
+    it 'that begins with 2 should return MasterCard', ->
+      topic = Payment.fns.cardType '2221000010000015'
+      assert.equal topic, 'mastercard'
+
     it 'that begins with 34 should return American Express', ->
       topic = Payment.fns.cardType '3412121212121212'
       assert.equal topic, 'amex'
@@ -233,13 +238,14 @@ describe 'payment', ->
       assert.equal(Payment.fns.cardType('3566002020360505'), 'jcb')
 
       assert.equal(Payment.fns.cardType('5555555555554444'), 'mastercard')
+      assert.equal(Payment.fns.cardType('2221000010000015'), 'mastercard')
 
       assert.equal(Payment.fns.cardType('4111111111111111'), 'visa')
       assert.equal(Payment.fns.cardType('4012888888881881'), 'visa')
       assert.equal(Payment.fns.cardType('4222222222222'), 'visa')
 
       assert.equal(Payment.fns.cardType('6759649826438453'), 'maestro')
-      
+
       assert.equal(Payment.fns.cardType('6363689826438453'), 'elo')
       assert.equal(Payment.fns.cardType('6362979826438453'), 'elo')
 
@@ -588,4 +594,3 @@ describe 'payment', ->
       cvc.dispatchEvent(ev)
 
       assert.equal QJ.val(cvc), '1234'
-
