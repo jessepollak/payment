@@ -1,6 +1,6 @@
 {
   "name": "payment",
-  "version": "1.0.0-beta1",
+  "version": "1.0.0-beta2",
   "description": "A general purpose library for building credit card forms, validating inputs and formatting numbers. Base on jquery.payment by @stripe, but without the jQuery.",
   "keywords": [
     "payment",
