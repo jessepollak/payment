@@ -1,6 +1,6 @@
 {
   "name": "payment",
-  "version": "1.0.4",
+  "version": "2.0.0-beta1",
   "description": "A general purpose library for building credit card forms, validating inputs and formatting numbers. Base on jquery.payment by @stripe, but without the jQuery.",
   "keywords": [
     "payment",
@@ -13,36 +13,43 @@
     "type": "git",
     "url": "https://github.com/jessepollak/payment.git"
   },
-  "main": "lib/payment.js",
+  "main": "lib/index.js",
   "scripts": {
-    "test": "gulp test"
-  },
-  "browserify": {
-    "transform": [
-      "coffeeify"
-    ]
+    "compile": "coffee -o lib/ --compile ./src/*.coffee",
+    "build": "NODE_ENV=production webpack",
+    "development": "coffee -o lib/ --compile --watch ./src/*.coffee",
+    "preversion": "npm run test",
+    "prepublish": "NODE_ENV=production npm run compile",
+    "postpublish": "git push origin master && git push --tags",
+    "test": "karma start --single-run --browsers PhantomJS"
   },
   "devDependencies": {
-    "browserify": "~11.2.0",
+    "browserify": "~13.0.1",
+    "coffee-loader": "^0.7.2",
     "coffee-script": "~1.10",
-    "gulp": "~3.9.0",
-    "gulp-autoprefixer": "3.0.2",
-    "gulp-changed": "~1.3.0",
-    "gulp-connect": "~2.2.0",
-    "gulp-livereload": "~3.8.1",
-    "gulp-mocha": "~2.1.3",
-    "gulp-open": "~1.0.0",
-    "gulp-rename": "~1.2.0",
-    "gulp-rimraf": "~0.2.0",
-    "jsdom": "~6.5",
-    "mocha": "~2.3",
-    "nodemon": "~1.7.1",
-    "run-sequence": "~1.1.4",
-    "tiny-lr": "0.2.0",
-    "vinyl-source-stream": "~1.1.0"
+    "jsdom": "~9.2",
+    "json-loader": "^0.5.4",
+    "karma": "^0.13.22",
+    "karma-chai": "^0.1.0",
+    "karma-chai-plugins": "^0.7.0",
+    "karma-chrome-launcher": "^0.2.3",
+    "karma-coverage": "^0.5.5",
+    "karma-mocha": "^0.2.2",
+    "karma-phantomjs-launcher": "^1.0.0",
+    "karma-sinon": "^1.0.4",
+    "karma-sourcemap-loader": "^0.3.7",
+    "karma-webpack": "^1.7.0",
+    "mocha": "~2.5",
+    "mocha-webpack": "^0.4.0",
+    "mversion": "^1.10.1",
+    "nodemon": "~1.9.2",
+    "phantomjs-prebuilt": "^2.1.7",
+    "run-sequence": "~1.2.1",
+    "tiny-lr": "0.2.1",
+    "vinyl-source-stream": "~1.1.0",
+    "webpack": "^1.13.1"
   },
   "dependencies": {
-    "qj": "~1.0.0",
-    "coffeeify": "^1.1.0"
+    "qj": "~2.0.0"
   }
 }

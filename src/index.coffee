@@ -1,4 +1,4 @@
-QJ = require 'qj/src/qj.coffee'
+QJ = require 'qj'
 
 defaultFormat = /(\d{1,4})/g
 
@@ -132,7 +132,6 @@ hasTextSelected = (target) ->
     if document?.selection?.createRange?
       return true if document.selection.createRange().text
   catch e
-    false
 
   false
 

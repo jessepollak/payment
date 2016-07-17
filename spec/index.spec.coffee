@@ -1,10 +1,6 @@
 assert = require('assert')
-window = require('jsdom').jsdom().defaultView
 
-global.window = window
-global.document = window.document
-
-Payment = require('../src/payment')
+Payment = require('../src/index')
 QJ = require('qj')
 
 describe 'payment', ->
@@ -239,7 +235,7 @@ describe 'payment', ->
       assert.equal(Payment.fns.cardType('4222222222222'), 'visa')
 
       assert.equal(Payment.fns.cardType('6759649826438453'), 'maestro')
-      
+ 
       assert.equal(Payment.fns.cardType('6363689826438453'), 'elo')
       assert.equal(Payment.fns.cardType('6362979826438453'), 'elo')
 
