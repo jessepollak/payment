@@ -237,10 +237,12 @@ var payment =
 	  }
 	  if (re.test(value)) {
 	    e.preventDefault();
-	    return QJ.val(target, value + ' ' + digit);
+	    QJ.val(target, value + ' ' + digit);
+	    return QJ.trigger(target, 'change');
 	  } else if (re.test(value + digit)) {
 	    e.preventDefault();
-	    return QJ.val(target, value + digit + ' ');
+	    QJ.val(target, value + digit + ' ');
+	    return QJ.trigger(target, 'change');
 	  }
 	};
 
