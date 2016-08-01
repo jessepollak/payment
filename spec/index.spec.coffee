@@ -235,6 +235,22 @@ describe 'payment', ->
       number.dispatchEvent(ev)
 
       assert.equal QJ.val(number), '4242'
+
+    it 'should restrict characters after the length', ->
+      number = document.createElement('input')
+      number.type = 'text'
+      QJ.val number, '4242 4242 4242 4242 424'
+
+      Payment.formatCardNumber(number)
+
+      ev = document.createEvent "HTMLEvents"
+      ev.initEvent "keypress", true, true
+      ev.eventName = "keypress"
+      ev.which = "4".charCodeAt(0)
+
+      number.dispatchEvent(ev)
+
+      assert.equal QJ.val(number), '4242 4242 4242 4242 424'
     it 'should restrict characters when a generic card number is 16 characters', ->
       number = document.createElement('input')
       number.type = 'text'
