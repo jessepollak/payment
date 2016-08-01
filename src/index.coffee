@@ -441,7 +441,7 @@ class Payment
       upperLength = card.length[card.length.length - 1]
 
       num = num.replace(/\D/g, '')
-      num = num.slice(0, upperLength - 1)
+      num = num.slice(0, upperLength)
 
       if card.format.global
         num.match(card.format)?.join(' ')
