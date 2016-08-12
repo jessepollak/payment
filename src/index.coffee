@@ -391,6 +391,8 @@ class Payment
       # Allow passing an object
       if typeof month is 'object' and 'month' of month
         {month, year} = month
+      else if typeof month is 'string' and '/' in month
+        {month, year} = Payment.fns.cardExpiryVal(month)
 
       return false unless month and year
 
