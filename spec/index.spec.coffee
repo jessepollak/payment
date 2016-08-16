@@ -141,6 +141,18 @@ describe 'payment', ->
       topic = Payment.fns.validateCardExpiry currentTime.getMonth() + '', currentTime.getFullYear() + ''
       assert.equal topic, true
 
+    it 'should validate a string with two digits month and year delimited by slash', ->
+      topic = Payment.fns.validateCardExpiry '03 / 25'
+      assert.equal topic, true
+
+    it 'should validate a string with two digits month and four digits year delimited by slash', ->
+      topic = Payment.fns.validateCardExpiry '03 / 2025'
+      assert.equal topic, true
+
+    it 'should fail if expires is string mm/yyyy where the year is before the current year', ->
+      topic = Payment.fns.validateCardExpiry '03 / 205'
+      assert.equal topic, false
+
     it 'that has non-numbers', ->
       topic = Payment.fns.validateCardExpiry 'h12', '3300'
       assert.equal topic, false
