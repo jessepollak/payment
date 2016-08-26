@@ -101,13 +101,14 @@ Example:
 Payment.fns.validateCardNumber('4242 4242 4242 4242'); //=> true
 ```
 
-### Payment.fns.validateCardExpiry(month, year)
+### Payment.fns.validateCardExpiry(month, year), Payment.fns.validateCardExpiry('month / year')
 
 Validates a card expiry:
 
 * Validates numbers
 * Validates in the future
 * Supports year shorthand
+* Supports formatted as `formatCardExpiry` input value
 
 Example:
 
@@ -115,6 +116,8 @@ Example:
 Payment.fns.validateCardExpiry('05', '20'); //=> true
 Payment.fns.validateCardExpiry('05', '2015'); //=> true
 Payment.fns.validateCardExpiry('05', '05'); //=> false
+Payment.fns.validateCardExpiry('05 / 25'); //=> true
+Payment.fns.validateCardExpiry('05 / 2015'); //=> false
 ```
 
 ### Payment.fns.validateCardCVC(cvc, type)

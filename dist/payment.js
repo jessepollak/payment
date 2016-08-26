@@ -495,9 +495,11 @@ var payment =
 	      return (ref = num.length, indexOf.call(card.length, ref) >= 0) && (card.luhn === false || luhnCheck(num));
 	    },
 	    validateCardExpiry: function(month, year) {
-	      var currentTime, expiry, prefix, ref;
+	      var currentTime, expiry, prefix, ref, ref1;
 	      if (typeof month === 'object' && 'month' in month) {
 	        ref = month, month = ref.month, year = ref.year;
+	      } else if (typeof month === 'string' && indexOf.call(month, '/') >= 0) {
+	        ref1 = Payment.fns.cardExpiryVal(month), month = ref1.month, year = ref1.year;
 	      }
 	      if (!(month && year)) {
 	        return false;
