@@ -480,7 +480,7 @@ class Payment
     QJ.on el, 'keypress', restrictCardNumber
     QJ.on el, 'keypress', formatCardNumber
     QJ.on el, 'keydown', formatBackCardNumber
-    QJ.on el, 'keyup', setCardType
+    QJ.on el, 'keyup blur', setCardType
     QJ.on el, 'paste', reFormatCardNumber
     el
   @getCardArray: -> return cards
