@@ -223,6 +223,10 @@ describe 'payment', ->
       topic = Payment.fns.cardType '4573931212121212'
       assert.equal topic, 'elo'
 
+    it 'should not miscategorize cards with 5067 in them as elo', ->
+      topic = Payment.fns.cardType '4012506712121212'
+      assert.equal topic, 'visa'
+
     it 'that is not numbers should return null', ->
       topic = Payment.fns.cardType 'aoeu'
       assert.equal topic, null
