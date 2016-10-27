@@ -199,9 +199,11 @@ formatBackCardNumber = (e) ->
   if /\d\s$/.test(value)
     e.preventDefault()
     QJ.val(target, value.replace(/\d\s$/, ''))
+    QJ.trigger(target, 'change')
   else if /\s\d?$/.test(value)
     e.preventDefault()
     QJ.val(target, value.replace(/\s\d?$/, ''))
+    QJ.trigger(target, 'change')
 
 # Format Expiry
 
@@ -216,10 +218,12 @@ formatExpiry = (e) ->
   if /^\d$/.test(val) and val not in ['0', '1']
     e.preventDefault()
     QJ.val(target, "0#{val} / ")
+    QJ.trigger(target, 'change')
 
   else if /^\d\d$/.test(val)
     e.preventDefault()
     QJ.val(target, "#{val} / ")
+    QJ.trigger(target, 'change')
 
 formatMonthExpiry = (e) ->
   digit = String.fromCharCode(e.which)
@@ -231,10 +235,12 @@ formatMonthExpiry = (e) ->
   if /^\d$/.test(val) and val not in ['0', '1']
     e.preventDefault()
     QJ.val(target, "0#{val}")
+    QJ.trigger(target, 'change')
 
   else if /^\d\d$/.test(val)
     e.preventDefault()
     QJ.val(target, "#{val}")
+    QJ.trigger(target, 'change')
 
 formatForwardExpiry = (e) ->
   digit = String.fromCharCode(e.which)
@@ -245,6 +251,7 @@ formatForwardExpiry = (e) ->
 
   if /^\d\d$/.test(val)
     QJ.val(target, "#{val} / ")
+    QJ.trigger(target, 'change')
 
 formatForwardSlash = (e) ->
   slash = String.fromCharCode(e.which)
@@ -255,6 +262,7 @@ formatForwardSlash = (e) ->
 
   if /^\d$/.test(val) and val isnt '0'
     QJ.val(target, "0#{val} / ")
+    QJ.trigger(target, 'change')
 
 formatBackExpiry = (e) ->
   # If shift+backspace is pressed
@@ -273,9 +281,11 @@ formatBackExpiry = (e) ->
   if /\d(\s|\/)+$/.test(value)
     e.preventDefault()
     QJ.val(target, value.replace(/\d(\s|\/)*$/, ''))
+    QJ.trigger(target, 'change')
   else if /\s\/\s?\d?$/.test(value)
     e.preventDefault()
     QJ.val(target, value.replace(/\s\/\s?\d?$/, ''))
+    QJ.trigger(target, 'change')
 
 #  Restrictions
 
