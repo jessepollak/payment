@@ -157,9 +157,16 @@ formatCardNumber = (e) ->
   card    = cardFromNumber(value + digit)
   length  = (value.replace(/\D/g, '') + digit).length
 
-  upperLength = 16
-  upperLength = card.length[card.length.length - 1] if card
-  return if length >= upperLength
+  upperLengths = [16]
+  upperLengths = card.length if card
+
+  # Return if an upper length has been reached
+  for upperLength, i in upperLengths
+    continue if length > upperLength and upperLengths[i+1]
+    return if length > upperLength
+    if length == upperLength
+      QJ.val(target, value + digit)
+      return
 
   # Return if focus isn't at the end of the text
   return if hasTextSelected(target)
