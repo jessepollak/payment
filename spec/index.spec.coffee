@@ -397,7 +397,36 @@ describe 'payment', ->
       # done in a setTimeout
       setTimeout ->
         assert.equal QJ.val(number), '4242 4'
+    it 'should format cc number correctly when transitioning from one length limit to another', ->
+      number = document.createElement('input')
+      number.type = 'text'
+      QJ.val(number, '4111 1111 1111 1111')
 
+      Payment.formatCardNumber(number)
+
+      ev = document.createEvent "HTMLEvents"
+      ev.initEvent "keypress", true, true
+      ev.eventName = "keypress"
+      ev.which = "1".charCodeAt(0)
+
+      number.dispatchEvent(ev)
+
+      assert.equal QJ.val(number), '4111 1111 1111 1111 1'
+    it 'should format cc number correctly when a lesser length limit is reached', ->
+      number = document.createElement('input')
+      number.type = 'text'
+      QJ.val(number, '4111 1111 1111 111')
+
+      Payment.formatCardNumber(number)
+
+      ev = document.createEvent "HTMLEvents"
+      ev.initEvent "keypress", true, true
+      ev.eventName = "keypress"
+      ev.which = "1".charCodeAt(0)
+
+      number.dispatchEvent(ev)
+      
+      assert.equal QJ.val(number), '4111 1111 1111 1111'
 
   describe 'formatCardExpiry', ->
     it 'should add a slash after two numbers', ->

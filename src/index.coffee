@@ -61,7 +61,6 @@ cards = [
   }
   {
       type: 'mastercard'
-      pattern: /^5[1-5]/
       pattern: /^(5[1-5]|677189)|^(222[1-9]|2[3-6]\d{2}|27[0-1]\d|2720)/
       format: defaultFormat
       length: [16]
@@ -158,9 +157,16 @@ formatCardNumber = (e) ->
   card    = cardFromNumber(value + digit)
   length  = (value.replace(/\D/g, '') + digit).length
 
-  upperLength = 16
-  upperLength = card.length[card.length.length - 1] if card
-  return if length >= upperLength
+  upperLengths = [16]
+  upperLengths = card.length if card
+
+  # Return if an upper length has been reached
+  for upperLength, i in upperLengths
+    continue if length > upperLength and upperLengths[i+1]
+    return if length > upperLength
+    if length == upperLength
+      QJ.val(target, value + digit)
+      return
 
   # Return if focus isn't at the end of the text
   return if hasTextSelected(target)
