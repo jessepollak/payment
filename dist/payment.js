@@ -97,14 +97,13 @@ var payment =
 	    luhn: true
 	  }, {
 	    type: 'maestro',
-	    pattern: /^(5018|5020|5038|6304|6703|6759|676[1-3])/,
+	    pattern: /^(5018|5020|5038|6304|6703|6708|6759|676[1-3])/,
 	    format: defaultFormat,
 	    length: [12, 13, 14, 15, 16, 17, 18, 19],
 	    cvcLength: [3],
 	    luhn: true
 	  }, {
 	    type: 'mastercard',
-	    pattern: /^5[1-5]/,
 	    pattern: /^(5[1-5]|677189)|^(222[1-9]|2[3-6]\d{2}|27[0-1]\d|2720)/,
 	    format: defaultFormat,
 	    length: [16],
@@ -126,7 +125,7 @@ var payment =
 	    luhn: true
 	  }, {
 	    type: 'elo',
-	    pattern: /^4011|438935|45(1416|76|7393)|50(4175|6699|67|90[4-7])|63(6297|6368)/,
+	    pattern: /^(4011|438935|45(1416|76|7393)|50(4175|6699|67|90[4-7])|63(6297|6368))/,
 	    format: defaultFormat,
 	    length: [16],
 	    cvcLength: [3],
@@ -142,10 +141,10 @@ var payment =
 	];
 
 	cardFromNumber = function(num) {
-	  var card, i, len;
+	  var card, j, len;
 	  num = (num + '').replace(/\D/g, '');
-	  for (i = 0, len = cards.length; i < len; i++) {
-	    card = cards[i];
+	  for (j = 0, len = cards.length; j < len; j++) {
+	    card = cards[j];
 	    if (card.pattern.test(num)) {
 	      return card;
 	    }
@@ -153,9 +152,9 @@ var payment =
 	};
 
 	cardFromType = function(type) {
-	  var card, i, len;
-	  for (i = 0, len = cards.length; i < len; i++) {
-	    card = cards[i];
+	  var card, j, len;
+	  for (j = 0, len = cards.length; j < len; j++) {
+	    card = cards[j];
 	    if (card.type === type) {
 	      return card;
 	    }
@@ -163,12 +162,12 @@ var payment =
 	};
 
 	luhnCheck = function(num) {
-	  var digit, digits, i, len, odd, sum;
+	  var digit, digits, j, len, odd, sum;
 	  odd = true;
 	  sum = 0;
 	  digits = (num + '').split('').reverse();
-	  for (i = 0, len = digits.length; i < len; i++) {
-	    digit = digits[i];
+	  for (j = 0, len = digits.length; j < len; j++) {
+	    digit = digits[j];
 	    digit = parseInt(digit, 10);
 	    if ((odd = !odd)) {
 	      digit *= 2;
@@ -212,7 +211,7 @@ var payment =
 	};
 
 	formatCardNumber = function(e) {
-	  var card, digit, length, re, target, upperLength, value;
+	  var card, digit, i, j, len, length, re, target, upperLength, upperLengths, value;
 	  digit = String.fromCharCode(e.which);
 	  if (!/^\d+$/.test(digit)) {
 	    return;
@@ -221,12 +220,22 @@ var payment =
 	  value = QJ.val(target);
 	  card = cardFromNumber(value + digit);
 	  length = (value.replace(/\D/g, '') + digit).length;
-	  upperLength = 16;
+	  upperLengths = [16];
 	  if (card) {
-	    upperLength = card.length[card.length.length - 1];
+	    upperLengths = card.length;
 	  }
-	  if (length >= upperLength) {
-	    return;
+	  for (i = j = 0, len = upperLengths.length; j < len; i = ++j) {
+	    upperLength = upperLengths[i];
+	    if (length > upperLength && upperLengths[i + 1]) {
+	      continue;
+	    }
+	    if (length > upperLength) {
+	      return;
+	    }
+	    if (length === upperLength) {
+	      QJ.val(target, value + digit);
+	      return;
+	    }
 	  }
 	  if (hasTextSelected(target)) {
 	    return;
@@ -262,10 +271,12 @@ var payment =
 	  }
 	  if (/\d\s$/.test(value)) {
 	    e.preventDefault();
-	    return QJ.val(target, value.replace(/\d\s$/, ''));
+	    QJ.val(target, value.replace(/\d\s$/, ''));
+	    return QJ.trigger(target, 'change');
 	  } else if (/\s\d?$/.test(value)) {
 	    e.preventDefault();
-	    return QJ.val(target, value.replace(/\s\d?$/, ''));
+	    QJ.val(target, value.replace(/\s\d?$/, ''));
+	    return QJ.trigger(target, 'change');
 	  }
 	};
 
@@ -279,10 +290,12 @@ var payment =
 	  val = QJ.val(target) + digit;
 	  if (/^\d$/.test(val) && (val !== '0' && val !== '1')) {
 	    e.preventDefault();
-	    return QJ.val(target, "0" + val + " / ");
+	    QJ.val(target, "0" + val + " / ");
+	    return QJ.trigger(target, 'change');
 	  } else if (/^\d\d$/.test(val)) {
 	    e.preventDefault();
-	    return QJ.val(target, val + " / ");
+	    QJ.val(target, val + " / ");
+	    return QJ.trigger(target, 'change');
 	  }
 	};
 
@@ -296,10 +309,12 @@ var payment =
 	  val = QJ.val(target) + digit;
 	  if (/^\d$/.test(val) && (val !== '0' && val !== '1')) {
 	    e.preventDefault();
-	    return QJ.val(target, "0" + val);
+	    QJ.val(target, "0" + val);
+	    return QJ.trigger(target, 'change');
 	  } else if (/^\d\d$/.test(val)) {
 	    e.preventDefault();
-	    return QJ.val(target, "" + val);
+	    QJ.val(target, "" + val);
+	    return QJ.trigger(target, 'change');
 	  }
 	};
 
@@ -312,7 +327,8 @@ var payment =
 	  target = e.target;
 	  val = QJ.val(target);
 	  if (/^\d\d$/.test(val)) {
-	    return QJ.val(target, val + " / ");
+	    QJ.val(target, val + " / ");
+	    return QJ.trigger(target, 'change');
 	  }
 	};
 
@@ -325,7 +341,8 @@ var payment =
 	  target = e.target;
 	  val = QJ.val(target);
 	  if (/^\d$/.test(val) && val !== '0') {
-	    return QJ.val(target, "0" + val + " / ");
+	    QJ.val(target, "0" + val + " / ");
+	    return QJ.trigger(target, 'change');
 	  }
 	};
 
@@ -344,10 +361,12 @@ var payment =
 	  }
 	  if (/\d(\s|\/)+$/.test(value)) {
 	    e.preventDefault();
-	    return QJ.val(target, value.replace(/\d(\s|\/)*$/, ''));
+	    QJ.val(target, value.replace(/\d(\s|\/)*$/, ''));
+	    return QJ.trigger(target, 'change');
 	  } else if (/\s\/\s?\d?$/.test(value)) {
 	    e.preventDefault();
-	    return QJ.val(target, value.replace(/\s\/\s?\d?$/, ''));
+	    QJ.val(target, value.replace(/\s\/\s?\d?$/, ''));
+	    return QJ.trigger(target, 'change');
 	  }
 	};
 
@@ -446,10 +465,10 @@ var payment =
 	  cardType = Payment.fns.cardType(val) || 'unknown';
 	  if (!QJ.hasClass(target, cardType)) {
 	    allTypes = (function() {
-	      var i, len, results;
+	      var j, len, results;
 	      results = [];
-	      for (i = 0, len = cards.length; i < len; i++) {
-	        card = cards[i];
+	      for (j = 0, len = cards.length; j < len; j++) {
+	        card = cards[j];
 	        results.push(card.type);
 	      }
 	      return results;
@@ -608,7 +627,7 @@ var payment =
 	    QJ.on(el, 'keypress', restrictCardNumber);
 	    QJ.on(el, 'keypress', formatCardNumber);
 	    QJ.on(el, 'keydown', formatBackCardNumber);
-	    QJ.on(el, 'keyup', setCardType);
+	    QJ.on(el, 'keyup blur', setCardType);
 	    QJ.on(el, 'paste', reFormatCardNumber);
 	    return el;
 	  };
