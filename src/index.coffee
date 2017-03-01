@@ -162,11 +162,8 @@ formatCardNumber = (e) ->
 
   # Return if an upper length has been reached
   for upperLength, i in upperLengths
-    continue if length > upperLength and upperLengths[i+1]
-    return if length > upperLength
-    if length == upperLength
-      QJ.val(target, value + digit)
-      return
+    continue if length >= upperLength and upperLengths[i+1]
+    return if length >= upperLength
 
   # Return if focus isn't at the end of the text
   return if hasTextSelected(target)
@@ -181,12 +178,6 @@ formatCardNumber = (e) ->
   if re.test(value)
     e.preventDefault()
     QJ.val(target, value + ' ' + digit)
-    QJ.trigger(target, 'change')
-
-  # If '424' + 2
-  else if re.test(value + digit)
-    e.preventDefault()
-    QJ.val(target, value + digit + ' ')
     QJ.trigger(target, 'change')
 
 formatBackCardNumber = (e) ->

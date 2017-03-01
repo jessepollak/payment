@@ -226,14 +226,10 @@ var payment =
 	  }
 	  for (i = j = 0, len = upperLengths.length; j < len; i = ++j) {
 	    upperLength = upperLengths[i];
-	    if (length > upperLength && upperLengths[i + 1]) {
+	    if (length >= upperLength && upperLengths[i + 1]) {
 	      continue;
 	    }
-	    if (length > upperLength) {
-	      return;
-	    }
-	    if (length === upperLength) {
-	      QJ.val(target, value + digit);
+	    if (length >= upperLength) {
 	      return;
 	    }
 	  }
@@ -248,10 +244,6 @@ var payment =
 	  if (re.test(value)) {
 	    e.preventDefault();
 	    QJ.val(target, value + ' ' + digit);
-	    return QJ.trigger(target, 'change');
-	  } else if (re.test(value + digit)) {
-	    e.preventDefault();
-	    QJ.val(target, value + digit + ' ');
 	    return QJ.trigger(target, 'change');
 	  }
 	};
