@@ -45,7 +45,7 @@ var payment =
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {var Payment, QJ, cardFromNumber, cardFromType, cards, defaultFormat, formatBackCardNumber, formatBackExpiry, formatCardNumber, formatExpiry, formatForwardExpiry, formatForwardSlash, formatMonthExpiry, hasTextSelected, luhnCheck, reFormatCardNumber, restrictCVC, restrictCardNumber, restrictCombinedExpiry, restrictExpiry, restrictMonthExpiry, restrictNumeric, restrictYearExpiry, setCardType,
+	/* WEBPACK VAR INJECTION */(function(global) {var Payment, QJ, cardFromNumber, cardFromType, cards, defaultFormat, formatBackCardNumber, formatBackExpiry, formatCardCVC, formatCardExpiry, formatCardNumber, formatExpiry, formatMonthExpiry, hasTextSelected, luhnCheck, reFormatCardNumber, restrictCVC, restrictCardNumber, restrictCombinedExpiry, restrictExpiry, restrictMonthExpiry, restrictNumeric, restrictYearExpiry, setCardType,
 	  indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 	QJ = __webpack_require__(1);
@@ -273,22 +273,13 @@ var payment =
 	};
 
 	formatExpiry = function(e) {
-	  var digit, target, val;
+	  var digit, r, target, val;
 	  digit = String.fromCharCode(e.which);
-	  if (!/^\d+$/.test(digit)) {
-	    return;
-	  }
 	  target = e.target;
 	  val = QJ.val(target) + digit;
-	  if (/^\d$/.test(val) && (val !== '0' && val !== '1')) {
-	    e.preventDefault();
-	    QJ.val(target, "0" + val + " / ");
-	    return QJ.trigger(target, 'change');
-	  } else if (/^\d\d$/.test(val)) {
-	    e.preventDefault();
-	    QJ.val(target, val + " / ");
-	    return QJ.trigger(target, 'change');
-	  }
+	  r = formatCardExpiry(val);
+	  QJ.val(target, "" + r);
+	  return QJ.trigger(target, 'change');
 	};
 
 	formatMonthExpiry = function(e) {
@@ -306,34 +297,6 @@ var payment =
 	  } else if (/^\d\d$/.test(val)) {
 	    e.preventDefault();
 	    QJ.val(target, "" + val);
-	    return QJ.trigger(target, 'change');
-	  }
-	};
-
-	formatForwardExpiry = function(e) {
-	  var digit, target, val;
-	  digit = String.fromCharCode(e.which);
-	  if (!/^\d+$/.test(digit)) {
-	    return;
-	  }
-	  target = e.target;
-	  val = QJ.val(target);
-	  if (/^\d\d$/.test(val)) {
-	    QJ.val(target, val + " / ");
-	    return QJ.trigger(target, 'change');
-	  }
-	};
-
-	formatForwardSlash = function(e) {
-	  var slash, target, val;
-	  slash = String.fromCharCode(e.which);
-	  if (slash !== '/') {
-	    return;
-	  }
-	  target = e.target;
-	  val = QJ.val(target);
-	  if (/^\d$/.test(val) && val !== '0') {
-	    QJ.val(target, "0" + val + " / ");
 	    return QJ.trigger(target, 'change');
 	  }
 	};
@@ -360,6 +323,43 @@ var payment =
 	    QJ.val(target, value.replace(/\s\/\s?\d?$/, ''));
 	    return QJ.trigger(target, 'change');
 	  }
+	};
+
+	formatCardCVC = function(num) {
+	  var value;
+	  if (isNaN(num)) {
+	    num = num.replace(/[a-zA-Z ]| /gi, '');
+	  }
+	  if (num < 0) {
+	    num *= -1;
+	  }
+	  value = num.toString();
+	  if (value.length > 4) {
+	    return parseInt(value.slice(0, 4));
+	  }
+	  return parseInt(num);
+	};
+
+	formatCardExpiry = function(text) {
+	  var fullYearNow, month, today, year;
+	  text = text.toString().replace(/[a-zA-Z ]| /gi, '');
+	  if (parseInt(text[0]) === 1 && text[1] === '/' && text.length === 2) {
+	    text = '0' + text;
+	  } else if (parseInt(text[0]) !== 1 && parseInt(text[0]) > 0) {
+	    text = '0' + text;
+	  }
+	  text = text.replace(/\//g, '');
+	  month = text.slice(0, 2);
+	  year = text.slice(2);
+	  if (year.length > 4) {
+	    year = year.slice(0, 4);
+	  }
+	  today = new Date();
+	  fullYearNow = today.getFullYear();
+	  if (month.length >= 2) {
+	    return month + ' / ' + year;
+	  }
+	  return text;
 	};
 
 	restrictNumeric = function(e) {
@@ -423,7 +423,22 @@ var payment =
 	};
 
 	restrictCombinedExpiry = function(e) {
-	  return restrictExpiry(e, 6);
+	  var digit, r, target, val, value;
+	  target = e.target;
+	  digit = String.fromCharCode(e.which);
+	  if (!/^\d+$/.test(digit)) {
+	    return;
+	  }
+	  if (hasTextSelected(target)) {
+	    return;
+	  }
+	  value = QJ.val(target) + digit;
+	  value = value.replace(/\D/g, '');
+	  val = QJ.val(target) + digit;
+	  r = formatCardExpiry(QJ.val(target));
+	  if (r === QJ.val(target)) {
+	    return e.preventDefault();
+	  }
 	};
 
 	restrictMonthExpiry = function(e) {
@@ -435,7 +450,7 @@ var payment =
 	};
 
 	restrictCVC = function(e) {
-	  var digit, target, val;
+	  var digit, r, target, val;
 	  target = e.target;
 	  digit = String.fromCharCode(e.which);
 	  if (!/^\d+$/.test(digit)) {
@@ -445,10 +460,13 @@ var payment =
 	    return;
 	  }
 	  val = QJ.val(target) + digit;
-	  if (!(val.length <= 4)) {
+	  r = formatCardCVC(val);
+	  if (r === parseInt(QJ.val(target))) {
 	    return e.preventDefault();
 	  }
 	};
+
+	restrictExpiry;
 
 	setCardType = function(e) {
 	  var allTypes, card, cardType, target, val;
@@ -575,6 +593,12 @@ var payment =
 	        }
 	        return groups != null ? groups.join(' ') : void 0;
 	      }
+	    },
+	    formatCardCVC: function(num) {
+	      return formatCardCVC(num);
+	    },
+	    formatCardExpiry: function(text) {
+	      return formatCardExpiry(text);
 	    }
 	  };
 
@@ -601,8 +625,6 @@ var payment =
 	    } else {
 	      QJ.on(el, 'keypress', restrictCombinedExpiry);
 	      QJ.on(el, 'keypress', formatExpiry);
-	      QJ.on(el, 'keypress', formatForwardSlash);
-	      QJ.on(el, 'keypress', formatForwardExpiry);
 	      QJ.on(el, 'keydown', formatBackExpiry);
 	    }
 	    return el;
