@@ -455,7 +455,7 @@ class Payment
       if card.format.global
         num.match(card.format)?.join(' ')
       else
-        groups = card.format.exec(num)
+        groups = card.format.exec(num).filter(Number)
         groups?.shift()
         groups?.join(' ')
   @restrictNumeric: (el) ->
