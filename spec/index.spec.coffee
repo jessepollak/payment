@@ -604,3 +604,74 @@ describe 'payment', ->
       cvc.dispatchEvent(ev)
 
       assert.equal QJ.val(cvc), '1234'
+
+  describe 'fns.formatCardCVC', ->
+    it 'should allow number', ->
+      topic = Payment.fns.formatCardCVC 1
+      assert.equal topic, 1
+
+      topic = Payment.fns.formatCardCVC 123
+      assert.equal topic, 123
+
+      topic = Payment.fns.formatCardCVC 1234
+      assert.equal topic, 1234
+
+    it 'should allow string number', ->
+      topic = Payment.fns.formatCardCVC '1234'
+      assert.equal topic, 1234
+
+    it 'should restrict to length <= 4', ->
+      topic = Payment.fns.formatCardCVC 12345
+      assert.equal topic, 1234
+
+      topic = Payment.fns.formatCardCVC 123456789
+      assert.equal topic, 1234
+
+  describe 'fns.formatCardExpiry', ->
+    it 'should allow number', ->
+      topic = Payment.fns.formatCardExpiry 1199
+      assert.equal topic, '11 / 99'
+
+      topic = Payment.fns.formatCardExpiry 113099
+      assert.equal topic, '11 / 3099'
+
+      topic = Payment.fns.formatCardExpiry 113099999
+      assert.equal topic, '11 / 3099'
+
+    it 'should allow string number', ->
+      topic = Payment.fns.formatCardExpiry '119'
+      assert.equal topic, '11 / 9'
+
+      topic = Payment.fns.formatCardExpiry '1199'
+      assert.equal topic, '11 / 99'
+
+      topic = Payment.fns.formatCardExpiry '1199999'
+      assert.equal topic, '11 / 9999'
+
+      topic = Payment.fns.formatCardExpiry '299'
+      assert.equal topic, '02 / 99'
+
+      topic = Payment.fns.formatCardExpiry '2'
+      assert.equal topic, '02 / '
+
+      topic = Payment.fns.formatCardExpiry '10'
+      assert.equal topic, '10 / '
+
+      topic = Payment.fns.formatCardExpiry '1/'
+      assert.equal topic, '01 / '
+
+    it 'should allow string with space or slash', ->
+      topic = Payment.fns.formatCardExpiry '1 1 /  9 9'
+      assert.equal topic, '11 / 99'
+
+      topic = Payment.fns.formatCardExpiry '1  13 / 99'
+      assert.equal topic, '11 / 399'
+
+      topic = Payment.fns.formatCardExpiry '1 / 13   99/2'
+      assert.equal topic, '11 / 3992'
+
+      topic = Payment.fns.formatCardExpiry '11/3099'
+      assert.equal topic, '11 / 3099'
+
+      topic = Payment.fns.formatCardExpiry '11 /   3 0 99'
+      assert.equal topic, '11 / 3099'

@@ -207,20 +207,11 @@ formatBackCardNumber = (e) ->
 formatExpiry = (e) ->
   # Only format if input is a number
   digit = String.fromCharCode(e.which)
-  return unless /^\d+$/.test(digit)
-
   target = e.target
-  val     = QJ.val(target) + digit
-
-  if /^\d$/.test(val) and val not in ['0', '1']
-    e.preventDefault()
-    QJ.val(target, "0#{val} / ")
-    QJ.trigger(target, 'change')
-
-  else if /^\d\d$/.test(val)
-    e.preventDefault()
-    QJ.val(target, "#{val} / ")
-    QJ.trigger(target, 'change')
+  val    = QJ.val(target) + digit
+  r = formatCardExpiry val
+  QJ.val(target, "#{r}")
+  QJ.trigger(target, 'change')
 
 formatMonthExpiry = (e) ->
   digit = String.fromCharCode(e.which)
@@ -237,28 +228,6 @@ formatMonthExpiry = (e) ->
   else if /^\d\d$/.test(val)
     e.preventDefault()
     QJ.val(target, "#{val}")
-    QJ.trigger(target, 'change')
-
-formatForwardExpiry = (e) ->
-  digit = String.fromCharCode(e.which)
-  return unless /^\d+$/.test(digit)
-
-  target = e.target
-  val     = QJ.val(target)
-
-  if /^\d\d$/.test(val)
-    QJ.val(target, "#{val} / ")
-    QJ.trigger(target, 'change')
-
-formatForwardSlash = (e) ->
-  slash = String.fromCharCode(e.which)
-  return unless slash is '/'
-
-  target = e.target
-  val     = QJ.val(target)
-
-  if /^\d$/.test(val) and val isnt '0'
-    QJ.val(target, "0#{val} / ")
     QJ.trigger(target, 'change')
 
 formatBackExpiry = (e) ->
@@ -283,6 +252,28 @@ formatBackExpiry = (e) ->
     e.preventDefault()
     QJ.val(target, value.replace(/\s\/\s?\d?$/, ''))
     QJ.trigger(target, 'change')
+
+formatCardCVC = (num) ->
+    num = num.replace(/[a-zA-Z ]| /gi, '') if isNaN(num)
+    num *= -1 if num < 0
+    value = num.toString()
+    return parseInt(value.slice(0, 4)) if value.length > 4
+    parseInt(num)
+
+formatCardExpiry = (text) ->
+    text = text.toString().replace(/[a-zA-Z ]| /gi, '')
+    if parseInt(text[0]) == 1 && text[1] == '/' && text.length == 2
+      text = '0' + text
+    else if parseInt(text[0]) != 1 && parseInt(text[0]) > 0
+      text = '0' + text
+    text = text.replace(/\//g, '')
+    month = text.slice(0, 2)
+    year = text.slice(2)
+    year = year.slice(0, 4) if year.length > 4
+    today = new Date()
+    fullYearNow = today.getFullYear()
+    return month + ' / ' + year if month.length >= 2
+    text
 
 #  Restrictions
 
@@ -334,7 +325,18 @@ restrictExpiry = (e, length) ->
   return e.preventDefault() if value.length > length
 
 restrictCombinedExpiry = (e) ->
-  return restrictExpiry e, 6
+  target = e.target
+  digit   = String.fromCharCode(e.which)
+  return unless /^\d+$/.test(digit)
+
+  return if hasTextSelected(target)
+
+  value = QJ.val(target) + digit
+  value = value.replace(/\D/g, '')
+
+  val     = QJ.val(target) + digit
+  r = formatCardExpiry QJ.val(target)
+  return e.preventDefault() if r == QJ.val(target)
 
 restrictMonthExpiry = (e) ->
   return restrictExpiry e, 2
@@ -350,7 +352,10 @@ restrictCVC = (e) ->
   return if hasTextSelected(target)
 
   val     = QJ.val(target) + digit
-  return e.preventDefault() unless val.length <= 4
+  r = formatCardCVC val
+  return e.preventDefault() if r == parseInt(QJ.val(target))
+
+restrictExpiry
 
 setCardType = (e) ->
   target  = e.target
@@ -458,6 +463,10 @@ class Payment
         groups = card.format.exec(num)
         groups?.shift()
         groups?.join(' ')
+    formatCardCVC: (num) ->
+      formatCardCVC num
+    formatCardExpiry: (text) ->
+      formatCardExpiry text
   @restrictNumeric: (el) ->
     QJ.on el, 'keypress', restrictNumeric
   @cardExpiryVal: (el) ->
@@ -474,8 +483,6 @@ class Payment
     else
       QJ.on el, 'keypress', restrictCombinedExpiry
       QJ.on el, 'keypress', formatExpiry
-      QJ.on el, 'keypress', formatForwardSlash
-      QJ.on el, 'keypress', formatForwardExpiry
       QJ.on el, 'keydown', formatBackExpiry
     el
   @formatCardExpiryMultiple: (month, year) ->
