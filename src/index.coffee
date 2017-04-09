@@ -489,6 +489,7 @@ class Payment
     QJ.on el, 'keydown', formatBackCardNumber
     QJ.on el, 'keyup blur', setCardType
     QJ.on el, 'paste', reFormatCardNumber
+    QJ.on el, 'input', reFormatCardNumber
     el
   @getCardArray: -> return cards
   @setCardArray: (cardArray) ->
