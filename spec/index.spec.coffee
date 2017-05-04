@@ -76,6 +76,17 @@ describe 'payment', ->
       assert(Payment.fns.validateCardNumber('6759649826438453'), 'maestro')
       assert(Payment.fns.validateCardNumber('6759 4111 0000 0008'), 'maestro')
       assert(Payment.fns.validateCardNumber('6759 6498 2643 8453'), 'maestro')
+    it 'should validate hipercard card types', ->
+      assert(Payment.fns.validateCardNumber('6062821086773091'), 'hipercard')
+      assert(Payment.fns.validateCardNumber('6062821399058131'), 'hipercard')
+      assert(Payment.fns.validateCardNumber('6062821272419749'), 'hipercard')
+      assert(Payment.fns.validateCardNumber('6062828566143547'), 'hipercard')
+      assert(Payment.fns.validateCardNumber('6062820659565470'), 'hipercard')
+      assert(Payment.fns.validateCardNumber('6062820917269238'), 'hipercard')
+      assert(Payment.fns.validateCardNumber('6062827193717160'), 'hipercard')
+      assert(Payment.fns.validateCardNumber('6062823689645296'), 'hipercard')
+      assert(Payment.fns.validateCardNumber('6062820932768784'), 'hipercard')
+      assert(Payment.fns.validateCardNumber('6062820530901712'), 'hipercard')
 
   describe 'Validating a CVC', ->
     it 'should fail if is empty', ->
@@ -226,6 +237,15 @@ describe 'payment', ->
     it 'should not miscategorize cards with 5067 in them as elo', ->
       topic = Payment.fns.cardType '4012506712121212'
       assert.equal topic, 'visa'
+
+    it 'should return hipercard type', ->
+      assert.equal (Payment.fns.cardType '384100'), 'hipercard'
+      assert.equal (Payment.fns.cardType '384140'), 'hipercard'
+      assert.equal (Payment.fns.cardType '384160'), 'hipercard'
+
+    it 'should not return hipercard type', ->
+      topic = Payment.fns.cardType '6011'
+      assert.equal topic, 'discover'
 
     it 'that is not numbers should return null', ->
       topic = Payment.fns.cardType 'aoeu'

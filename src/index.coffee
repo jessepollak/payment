@@ -20,6 +20,14 @@ cards = [
       luhn: true
   }
   {
+      type: 'hipercard',
+      pattern: /^(384100|384140|384160|60(?!11))/,
+      format: defaultFormat,
+      length: [16],
+      cvcLength: [3],
+      luhn: true
+  }
+  {
       type: 'dinersclub'
       pattern: /^(36|38|30[0-5])/
       format: /(\d{1,4})(\d{1,6})?(\d{1,4})?/
