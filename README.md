@@ -33,6 +33,7 @@ Supported card types are:
 * Laser
 * UnionPay
 * Elo
+* Hipercard
 
 ## API
 
@@ -150,6 +151,7 @@ Returns a card type. Either:
 * `laser`
 * `unionpay`
 * `elo`
+* `hipercard`
 
 The function will return `null` if the card type can't be determined.
 
