@@ -23,7 +23,7 @@ cards = [
       type: 'hipercard',
       pattern: /^(384100|384140|384160|60(?!11))/,
       format: defaultFormat,
-      length: [16],
+      length: [13, 16, 19],
       cvcLength: [3],
       luhn: true
   }
