@@ -78,15 +78,12 @@ describe 'payment', ->
       assert(Payment.fns.validateCardNumber('6759 6498 2643 8453'), 'maestro')
     it 'should validate hipercard card types', ->
       assert(Payment.fns.validateCardNumber('6062821086773091'), 'hipercard')
-      assert(Payment.fns.validateCardNumber('6062821399058131'), 'hipercard')
-      assert(Payment.fns.validateCardNumber('6062821272419749'), 'hipercard')
-      assert(Payment.fns.validateCardNumber('6062828566143547'), 'hipercard')
-      assert(Payment.fns.validateCardNumber('6062820659565470'), 'hipercard')
-      assert(Payment.fns.validateCardNumber('6062820917269238'), 'hipercard')
-      assert(Payment.fns.validateCardNumber('6062827193717160'), 'hipercard')
-      assert(Payment.fns.validateCardNumber('6062823689645296'), 'hipercard')
-      assert(Payment.fns.validateCardNumber('6062820932768784'), 'hipercard')
-      assert(Payment.fns.validateCardNumber('6062820530901712'), 'hipercard')
+      assert(Payment.fns.validateCardNumber('6375683647504601'), 'hipercard')
+      assert(Payment.fns.validateCardNumber('6370957513839696'), 'hipercard')
+      assert(Payment.fns.validateCardNumber('6375688248373892'), 'hipercard')
+      assert(Payment.fns.validateCardNumber('6012135281693108'), 'hipercard')
+      assert(Payment.fns.validateCardNumber('38410036464094'), 'hipercard')
+      assert(Payment.fns.validateCardNumber('38414050328938'), 'hipercard')
 
   describe 'Validating a CVC', ->
     it 'should fail if is empty', ->
@@ -242,6 +239,8 @@ describe 'payment', ->
       assert.equal (Payment.fns.cardType '384100'), 'hipercard'
       assert.equal (Payment.fns.cardType '384140'), 'hipercard'
       assert.equal (Payment.fns.cardType '384160'), 'hipercard'
+      assert.equal (Payment.fns.cardType '6062'), 'hipercard'
+      assert.equal (Payment.fns.cardType '6012'), 'hipercard'
 
     it 'should not return hipercard type', ->
       topic = Payment.fns.cardType '6011'
