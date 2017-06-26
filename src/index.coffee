@@ -176,8 +176,7 @@ formatCardNumber = (e) ->
 
   # If '4242' + 4
   if re.test(value)
-    e.preventDefault()
-    QJ.val(target, value + ' ' + digit)
+    QJ.val(target, value + ' ')
     QJ.trigger(target, 'change')
 
 formatBackCardNumber = (e) ->
@@ -197,9 +196,8 @@ formatBackCardNumber = (e) ->
     e.preventDefault()
     QJ.val(target, value.replace(/\d\s$/, ''))
     QJ.trigger(target, 'change')
-  else if /\s\d?$/.test(value)
-    e.preventDefault()
-    QJ.val(target, value.replace(/\s\d?$/, ''))
+  else if /\s\d$/.test(value)
+    QJ.val(target, value.replace(/\d?$/, ''))
     QJ.trigger(target, 'change')
 
 # Format Expiry
