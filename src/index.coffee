@@ -456,8 +456,10 @@ class Payment
         num.match(card.format)?.join(' ')
       else
         groups = card.format.exec(num)
-        groups?.shift()
-        groups?.join(' ')
+        return unless groups?
+        groups.shift()
+        groups = groups.filter((n) -> n) # Filter empty groups
+        groups.join(' ')
   @restrictNumeric: (el) ->
     QJ.on el, 'keypress', restrictNumeric
   @cardExpiryVal: (el) ->
