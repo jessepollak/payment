@@ -147,7 +147,7 @@ reFormatCardNumber = (e) ->
     QJ.val(target, value)
     QJ.trigger(target, 'change')
 
-formatCardNumber = (e) ->
+formatCardNumber = (maxLength) -> (e) ->
   # Only format if input is a number
   digit = String.fromCharCode(e.which)
   return unless /^\d+$/.test(digit)
@@ -159,6 +159,7 @@ formatCardNumber = (e) ->
 
   upperLengths = [16]
   upperLengths = card.length if card
+  upperLengths = [Math.min maxLength, upperLengths[..].pop()] if maxLength
 
   # Return if an upper length has been reached
   for upperLength, i in upperLengths
@@ -304,7 +305,7 @@ restrictNumeric = (e) ->
   # Char is a number or a space
   return e.preventDefault() if !/[\d\s]/.test(input)
 
-restrictCardNumber = (e) ->
+restrictCardNumber = (maxLength) -> (e) ->
   target = e.target
   digit   = String.fromCharCode(e.which)
   return unless /^\d+$/.test(digit)
@@ -315,11 +316,11 @@ restrictCardNumber = (e) ->
   value = (QJ.val(target) + digit).replace(/\D/g, '')
   card  = cardFromNumber(value)
 
-  if card
-    e.preventDefault() unless value.length <= card.length[card.length.length - 1]
-  else
-    # All other cards are 16 digits long
-    e.preventDefault() unless value.length <= 16
+  length = 16
+  length = card.length[card.length.length - 1] if card
+  length = Math.min length, maxLength if maxLength
+
+  e.preventDefault() unless value.length <= length
 
 restrictExpiry = (e, length) ->
   target = e.target
@@ -482,10 +483,10 @@ class Payment
     QJ.on month, 'keypress', restrictMonthExpiry
     QJ.on month, 'keypress', formatMonthExpiry
     QJ.on year, 'keypress', restrictYearExpiry
-  @formatCardNumber: (el) ->
+  @formatCardNumber: (el, maxLength) ->
     Payment.restrictNumeric el
-    QJ.on el, 'keypress', restrictCardNumber
-    QJ.on el, 'keypress', formatCardNumber
+    QJ.on el, 'keypress', restrictCardNumber(maxLength)
+    QJ.on el, 'keypress', formatCardNumber(maxLength)
     QJ.on el, 'keydown', formatBackCardNumber
     QJ.on el, 'keyup blur', setCardType
     QJ.on el, 'paste', reFormatCardNumber
