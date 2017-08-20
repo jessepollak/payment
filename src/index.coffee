@@ -20,6 +20,14 @@ cards = [
       luhn: true
   }
   {
+      type: 'hipercard',
+      pattern: /^(384100|384140|384160|606282|637095|637568|60(?!11))/,
+      format: defaultFormat,
+      length: [14..19],
+      cvcLength: [3],
+      luhn: true
+  }
+  {
       type: 'dinersclub'
       pattern: /^(36|38|30[0-5])/
       format: /(\d{1,4})(\d{1,6})?(\d{1,4})?/
@@ -85,7 +93,7 @@ cards = [
   }
   {
       type: 'elo'
-      pattern: /^(4011|438935|45(1416|76|7393)|50(4175|6699|67|90[4-7])|63(6297|6368))/,
+      pattern: /^(4011(78|79)|43(1274|8935)|45(1416|7393|763(1|2))|50(4175|6699|67[0-7][0-9]|9000)|627780|63(6297|6368)|650(03([^4])|04([0-9])|05(0|1)|4(0[5-9]|3[0-9]|8[5-9]|9[0-9])|5([0-2][0-9]|3[0-8])|9([2-6][0-9]|7[0-8])|541|700|720|901)|651652|655000|655021)/,
       format: defaultFormat
       length: [16]
       cvcLength: [3]
@@ -98,6 +106,14 @@ cards = [
       length: [13, 16, 19]
       cvcLength: [3]
       luhn: true
+  }
+  {
+      type: 'verve',
+      pattern: /^([506]{3})([0-9]{1,16})$/,
+      format: defaultFormat,
+      length: [19],
+      cvcLength: [3],
+      luhn: false
   }
 ]
 
@@ -177,8 +193,7 @@ formatCardNumber = (maxLength) -> (e) ->
 
   # If '4242' + 4
   if re.test(value)
-    e.preventDefault()
-    QJ.val(target, value + ' ' + digit)
+    QJ.val(target, value + ' ')
     QJ.trigger(target, 'change')
 
 formatBackCardNumber = (e) ->
@@ -198,9 +213,8 @@ formatBackCardNumber = (e) ->
     e.preventDefault()
     QJ.val(target, value.replace(/\d\s$/, ''))
     QJ.trigger(target, 'change')
-  else if /\s\d?$/.test(value)
-    e.preventDefault()
-    QJ.val(target, value.replace(/\s\d?$/, ''))
+  else if /\s\d$/.test(value)
+    QJ.val(target, value.replace(/\d?$/, ''))
     QJ.trigger(target, 'change')
 
 # Format Expiry
@@ -457,8 +471,10 @@ class Payment
         num.match(card.format)?.join(' ')
       else
         groups = card.format.exec(num)
-        groups?.shift()
-        groups?.join(' ')
+        return unless groups?
+        groups.shift()
+        groups = groups.filter((n) -> n) # Filter empty groups
+        groups.join(' ')
   @restrictNumeric: (el) ->
     QJ.on el, 'keypress', restrictNumeric
   @cardExpiryVal: (el) ->

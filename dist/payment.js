@@ -137,6 +137,13 @@ var payment =
 	    length: [13, 16, 19],
 	    cvcLength: [3],
 	    luhn: true
+	  }, {
+	    type: 'verve',
+	    pattern: /^([506]{3})([0-9]{1,16})$/,
+	    format: defaultFormat,
+	    length: [19],
+	    cvcLength: [3],
+	    luhn: false
 	  }
 	];
 
@@ -578,10 +585,14 @@ var payment =
 	        return (ref = num.match(card.format)) != null ? ref.join(' ') : void 0;
 	      } else {
 	        groups = card.format.exec(num);
-	        if (groups != null) {
-	          groups.shift();
+	        if (groups == null) {
+	          return;
 	        }
-	        return groups != null ? groups.join(' ') : void 0;
+	        groups.shift();
+	        groups = groups.filter(function(n) {
+	          return n;
+	        });
+	        return groups.join(' ');
 	      }
 	    }
 	  };
