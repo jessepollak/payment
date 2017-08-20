@@ -137,6 +137,13 @@ var payment =
 	    length: [13, 16, 19],
 	    cvcLength: [3],
 	    luhn: true
+	  }, {
+	    type: 'verve',
+	    pattern: /^([506]{3})([0-9]{1,16})$/,
+	    format: defaultFormat,
+	    length: [19],
+	    cvcLength: [3],
+	    luhn: false
 	  }
 	];
 
@@ -625,6 +632,7 @@ var payment =
 	    QJ.on(el, 'keydown', formatBackCardNumber);
 	    QJ.on(el, 'keyup blur', setCardType);
 	    QJ.on(el, 'paste', reFormatCardNumber);
+	    QJ.on(el, 'input', reFormatCardNumber);
 	    return el;
 	  };
 
