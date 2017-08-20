@@ -316,6 +316,37 @@ describe 'payment', ->
       number.dispatchEvent(ev)
 
       assert.equal QJ.val(number), '4000 0000 0000 0000 030'
+
+    it 'should restrict characters for visa when a `maxLength` parameter is set despite card length can be 19', ->
+      number = document.createElement('input')
+      number.type = 'text'
+      QJ.val(number, '4242 4242 4242 4242')
+
+      Payment.formatCardNumber(number, 16)
+
+      ev = document.createEvent "HTMLEvents"
+      ev.initEvent "keypress", true, true
+      ev.eventName = "keypress"
+      ev.which = "0".charCodeAt(0)
+
+      number.dispatchEvent(ev)
+
+      assert.equal QJ.val(number), '4242 4242 4242 4242'
+    it 'should restrict characters correctly if `maxLength` exceeds max length for card', ->
+      number = document.createElement('input')
+      number.type = 'text'
+      QJ.val(number, '3472 486270 35790')
+
+      Payment.formatCardNumber(number, 16)
+
+      ev = document.createEvent "HTMLEvents"
+      ev.initEvent "keypress", true, true
+      ev.eventName = "keypress"
+      ev.which = "0".charCodeAt(0)
+
+      number.dispatchEvent(ev)
+
+      assert.equal QJ.val(number), '3472 486270 35790'
     it 'should format cc number correctly', ->
       number = document.createElement('input')
       number.type = 'text'

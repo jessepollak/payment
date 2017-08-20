@@ -37,7 +37,7 @@ Supported card types are:
 
 ## API
 
-### Payment.formatCardNumber
+### Payment.formatCardNumber(element[, maxLength])
 Formats card numbers:
 
 * Includes a space between every 4 digits
@@ -45,6 +45,7 @@ Formats card numbers:
 * Limits to 16 numbers
 * Supports American Express formatting
 * Adds a class of the card type (e.g. 'visa') to the input
+* If second parameter is specified then card length will be limited to its value (19 digits cards are not in use despite being included in specifications)
 
 Example:
 
@@ -52,7 +53,7 @@ Example:
 Payment.formatCardNumber(document.querySelector('input.cc-num'));
 ```
 
-### Payment.formatCardExpiry
+### Payment.formatCardExpiry(element)
 
 Formats card expiry:
 
@@ -66,7 +67,7 @@ Example:
 Payment.formatCardExpiry(document.querySelector('input.cc-exp'));
 ```
 
-### Payment.formatCardCVC
+### Payment.formatCardCVC(element)
 Formats card CVC:
 
 * Restricts length to 4 numbers
@@ -78,7 +79,7 @@ Example:
 Payment.formatCardCVC(document.querySelector('input.cc-cvc'));
 ```
 
-### Payment.restrictNumeric
+### Payment.restrictNumeric(element)
 
 General numeric input restriction.
 

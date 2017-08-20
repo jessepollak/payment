@@ -53,7 +53,7 @@
       validation = document.querySelector('.validation');
 
     Payment.restrictNumeric(numeric);
-    Payment.formatCardNumber(number);
+    Payment.formatCardNumber(number, 16);
     Payment.formatCardExpiry(exp);
     Payment.formatCardCVC(cvc);
 

@@ -217,42 +217,47 @@ var payment =
 	  })(this));
 	};
 
-	formatCardNumber = function(e) {
-	  var card, digit, i, j, len, length, re, target, upperLength, upperLengths, value;
-	  digit = String.fromCharCode(e.which);
-	  if (!/^\d+$/.test(digit)) {
-	    return;
-	  }
-	  target = e.target;
-	  value = QJ.val(target);
-	  card = cardFromNumber(value + digit);
-	  length = (value.replace(/\D/g, '') + digit).length;
-	  upperLengths = [16];
-	  if (card) {
-	    upperLengths = card.length;
-	  }
-	  for (i = j = 0, len = upperLengths.length; j < len; i = ++j) {
-	    upperLength = upperLengths[i];
-	    if (length >= upperLength && upperLengths[i + 1]) {
-	      continue;
-	    }
-	    if (length >= upperLength) {
+	formatCardNumber = function(maxLength) {
+	  return function(e) {
+	    var card, digit, i, j, len, length, re, target, upperLength, upperLengths, value;
+	    digit = String.fromCharCode(e.which);
+	    if (!/^\d+$/.test(digit)) {
 	      return;
 	    }
-	  }
-	  if (hasTextSelected(target)) {
-	    return;
-	  }
-	  if (card && card.type === 'amex') {
-	    re = /^(\d{4}|\d{4}\s\d{6})$/;
-	  } else {
-	    re = /(?:^|\s)(\d{4})$/;
-	  }
-	  if (re.test(value)) {
-	    e.preventDefault();
-	    QJ.val(target, value + ' ' + digit);
-	    return QJ.trigger(target, 'change');
-	  }
+	    target = e.target;
+	    value = QJ.val(target);
+	    card = cardFromNumber(value + digit);
+	    length = (value.replace(/\D/g, '') + digit).length;
+	    upperLengths = [16];
+	    if (card) {
+	      upperLengths = card.length;
+	    }
+	    if (maxLength) {
+	      upperLengths = [Math.min(maxLength, upperLengths.slice(0).pop())];
+	    }
+	    for (i = j = 0, len = upperLengths.length; j < len; i = ++j) {
+	      upperLength = upperLengths[i];
+	      if (length >= upperLength && upperLengths[i + 1]) {
+	        continue;
+	      }
+	      if (length >= upperLength) {
+	        return;
+	      }
+	    }
+	    if (hasTextSelected(target)) {
+	      return;
+	    }
+	    if (card && card.type === 'amex') {
+	      re = /^(\d{4}|\d{4}\s\d{6})$/;
+	    } else {
+	      re = /(?:^|\s)(\d{4})$/;
+	    }
+	    if (re.test(value)) {
+	      e.preventDefault();
+	      QJ.val(target, value + ' ' + digit);
+	      return QJ.trigger(target, 'change');
+	    }
+	  };
 	};
 
 	formatBackCardNumber = function(e) {
@@ -389,27 +394,30 @@ var payment =
 	  }
 	};
 
-	restrictCardNumber = function(e) {
-	  var card, digit, target, value;
-	  target = e.target;
-	  digit = String.fromCharCode(e.which);
-	  if (!/^\d+$/.test(digit)) {
-	    return;
-	  }
-	  if (hasTextSelected(target)) {
-	    return;
-	  }
-	  value = (QJ.val(target) + digit).replace(/\D/g, '');
-	  card = cardFromNumber(value);
-	  if (card) {
-	    if (!(value.length <= card.length[card.length.length - 1])) {
+	restrictCardNumber = function(maxLength) {
+	  return function(e) {
+	    var card, digit, length, target, value;
+	    target = e.target;
+	    digit = String.fromCharCode(e.which);
+	    if (!/^\d+$/.test(digit)) {
+	      return;
+	    }
+	    if (hasTextSelected(target)) {
+	      return;
+	    }
+	    value = (QJ.val(target) + digit).replace(/\D/g, '');
+	    card = cardFromNumber(value);
+	    length = 16;
+	    if (card) {
+	      length = card.length[card.length.length - 1];
+	    }
+	    if (maxLength) {
+	      length = Math.min(length, maxLength);
+	    }
+	    if (!(value.length <= length)) {
 	      return e.preventDefault();
 	    }
-	  } else {
-	    if (!(value.length <= 16)) {
-	      return e.preventDefault();
-	    }
-	  }
+	  };
 	};
 
 	restrictExpiry = function(e, length) {
@@ -625,10 +633,10 @@ var payment =
 	    return QJ.on(year, 'keypress', restrictYearExpiry);
 	  };
 
-	  Payment.formatCardNumber = function(el) {
+	  Payment.formatCardNumber = function(el, maxLength) {
 	    Payment.restrictNumeric(el);
-	    QJ.on(el, 'keypress', restrictCardNumber);
-	    QJ.on(el, 'keypress', formatCardNumber);
+	    QJ.on(el, 'keypress', restrictCardNumber(maxLength));
+	    QJ.on(el, 'keypress', formatCardNumber(maxLength));
 	    QJ.on(el, 'keydown', formatBackCardNumber);
 	    QJ.on(el, 'keyup blur', setCardType);
 	    QJ.on(el, 'paste', reFormatCardNumber);
