@@ -167,7 +167,7 @@ formatCardNumber = (maxLength) -> (e) ->
 
   upperLengths = [16]
   upperLengths = card.length if card
-  upperLengths = [Math.min maxLength, upperLengths[..].pop()] if maxLength
+  upperLengths = upperLengths.filter((x) -> x <= maxLength) if maxLength
 
   # Return if an upper length has been reached
   for upperLength, i in upperLengths
