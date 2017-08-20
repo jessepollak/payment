@@ -107,14 +107,6 @@ cards = [
       cvcLength: [3]
       luhn: true
   }
-  {
-      type: 'verve',
-      pattern: /^([506]{3})([0-9]{1,16})$/,
-      format: defaultFormat,
-      length: [19],
-      cvcLength: [3],
-      luhn: false
-  }
 ]
 
 cardFromNumber = (num) ->
