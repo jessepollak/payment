@@ -84,6 +84,8 @@ describe 'payment', ->
       assert(Payment.fns.validateCardNumber('6012135281693108'), 'hipercard')
       assert(Payment.fns.validateCardNumber('38410036464094'), 'hipercard')
       assert(Payment.fns.validateCardNumber('38414050328938'), 'hipercard')
+    it 'should validate bcmc card types', ->
+      assert(Payment.fns.validateCardNumber('67030000000000003'), 'bcmc')
 
   describe 'Validating a CVC', ->
     it 'should fail if is empty', ->
@@ -226,6 +228,10 @@ describe 'payment', ->
     it 'that begins with 34 should return American Express', ->
       topic = Payment.fns.cardType '3412121212121212'
       assert.equal topic, 'amex'
+
+    it 'that begins with 6703 should return Bcmc', ->
+      topic = Payment.fns.cardType '67030000000000003'
+      assert.equal topic, 'bcmc'
 
     it 'that begins with 457393 should return Elo', ->
       topic = Payment.fns.cardType '4573931212121212'

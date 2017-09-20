@@ -11,6 +11,14 @@ cards = [
       cvcLength: [4]
       luhn: true
   }
+ {
+    type: 'bcmc',
+    pattern: /^6703/,
+    format: defaultFormat,
+    length: [12..19],
+    cvcLength: [0],
+    luhn: true
+  }
   {
       type: 'dankort',
       pattern: /^5019/,
@@ -61,7 +69,7 @@ cards = [
   }
   {
       type: 'maestro'
-      pattern: /^(5018|5020|5038|6304|6703|6708|6759|676[1-3])/
+      pattern: /^(5018|5020|5038|6304|6708|6759|676[1-3])/
       format: defaultFormat
       length: [12..19]
       cvcLength: [3]
