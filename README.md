@@ -200,11 +200,11 @@ Look in [`./example/index.html`](example/index.html)
 
 ## Building
 
-Run `gulp build`
+Run `npm run build`
 
 ## Running tests
 
-Run `gulp test`
+Run `npm run test`
 
 ## Autocomplete recommendations
 
