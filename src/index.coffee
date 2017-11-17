@@ -39,7 +39,7 @@ cards = [
       type: 'discover'
       pattern: /^(6011|65|64[4-9]|622)/
       format: defaultFormat
-      length: [16]
+      length: [16, 19]
       cvcLength: [3]
       luhn: true
   }
