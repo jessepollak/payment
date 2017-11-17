@@ -76,6 +76,14 @@ cards = [
       luhn: true
   }
   {
+      type: 'mir'
+      pattern: /^220[0-4][0-9][0-9]\d{10}$/
+      format: defaultFormat
+      length: [16]
+      cvcLength: [3]
+      luhn: true
+  }
+  {
       type: 'unionpay'
       pattern: /^62/
       format: defaultFormat

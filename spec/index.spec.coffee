@@ -84,6 +84,8 @@ describe 'payment', ->
       assert(Payment.fns.validateCardNumber('6012135281693108'), 'hipercard')
       assert(Payment.fns.validateCardNumber('38410036464094'), 'hipercard')
       assert(Payment.fns.validateCardNumber('38414050328938'), 'hipercard')
+    it 'should validate mir card types', ->
+      assert(Payment.fns.validateCardNumber('2202200249572403'), 'mir')
 
   describe 'Validating a CVC', ->
     it 'should fail if is empty', ->
