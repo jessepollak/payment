@@ -654,3 +654,18 @@ describe 'payment', ->
       cvc.dispatchEvent(ev)
 
       assert.equal QJ.val(cvc), '1234'
+  describe 'Adding and removing cards', ->
+    it 'should remove card by type', ->
+      Payment.removeFromCardArray('amex')
+      assert.equal 12, Payment.getCardArray().length
+
+    it 'should add custom card', ->
+      Payment.addToCardArray({
+        type: 'sorocred'
+        pattern: /^6278/
+        format: /(\d{1,4})/g
+        length: [16]
+        cvcLength: [3]
+        luhn: true
+      })
+      assert.equal 13, Payment.getCardArray().length
