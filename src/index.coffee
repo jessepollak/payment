@@ -107,6 +107,14 @@ cards = [
       cvcLength: [3]
       luhn: true
   }
+  {
+       type: 'troy',
+       pattern: /^9792\d{12}$/,
+       format: defaultFormat,
+       length: [16],
+       cvcLength: [3],
+       luhn: true
+  }
 ]
 
 cardFromNumber = (num) ->
