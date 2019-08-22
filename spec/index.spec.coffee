@@ -76,6 +76,7 @@ describe 'payment', ->
       assert(Payment.fns.validateCardNumber('6759649826438453'), 'maestro')
       assert(Payment.fns.validateCardNumber('6759 4111 0000 0008'), 'maestro')
       assert(Payment.fns.validateCardNumber('6759 6498 2643 8453'), 'maestro')
+      assert(Payment.fns.validateCardNumber('5854 4424 5645 0444'), 'maestro')
     it 'should validate hipercard card types', ->
       assert(Payment.fns.validateCardNumber('6062821086773091'), 'hipercard')
       assert(Payment.fns.validateCardNumber('6375683647504601'), 'hipercard')

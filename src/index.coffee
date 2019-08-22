@@ -61,7 +61,7 @@ cards = [
   }
   {
       type: 'maestro'
-      pattern: /^(5018|5020|5038|6304|6703|6708|6759|676[1-3])/
+      pattern: /^(5018|5020|5038|5[6-9]|6304|6703|6708|6759|676[1-3])/
       format: defaultFormat
       length: [12..19]
       cvcLength: [3]
