@@ -76,6 +76,7 @@ describe 'payment', ->
       assert(Payment.fns.validateCardNumber('6759649826438453'), 'maestro')
       assert(Payment.fns.validateCardNumber('6759 4111 0000 0008'), 'maestro')
       assert(Payment.fns.validateCardNumber('6759 6498 2643 8453'), 'maestro')
+      assert(Payment.fns.validateCardNumber('5854 4424 5645 0444'), 'maestro')
     it 'should validate hipercard card types', ->
       assert(Payment.fns.validateCardNumber('6062821086773091'), 'hipercard')
       assert(Payment.fns.validateCardNumber('6375683647504601'), 'hipercard')
@@ -654,3 +655,19 @@ describe 'payment', ->
       cvc.dispatchEvent(ev)
 
       assert.equal QJ.val(cvc), '1234'
+
+    describe 'Adding and removing cards', ->
+    it 'should remove card by type', ->
+      Payment.removeFromCardArray('amex')
+      assert.equal 12, Payment.getCardArray().length
+
+    it 'should add custom card', ->
+      Payment.addToCardArray({
+        type: 'sorocred'
+        pattern: /^6278/
+        format: /(\d{1,4})/g
+        length: [16]
+        cvcLength: [3]
+        luhn: true
+      })
+      assert.equal 13, Payment.getCardArray().length 
