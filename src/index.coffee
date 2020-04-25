@@ -93,7 +93,7 @@ cards = [
   }
   {
       type: 'troy',
-      pattern: /^9792\d{12}$/,
+      pattern: /^9792/,
       format: defaultFormat,
       length: [16],
       cvcLength: [3],
