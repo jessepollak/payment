@@ -41,7 +41,7 @@
     "karma-webpack": "^1.7.0",
     "mocha": "~2.5",
     "mocha-webpack": "^0.4.0",
-    "mversion": "^1.10.1",
+    "mversion": "^2.0.0",
     "nodemon": "~1.9.2",
     "phantomjs-prebuilt": "^2.1.7",
     "run-sequence": "~1.2.1",
