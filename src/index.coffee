@@ -127,7 +127,13 @@ cards = [
 
 cardFromNumber = (num) ->
   num = (num + '').replace(/\D/g, '')
-  return card for card in cards when card.pattern.test(num)
+  foundCard = undefined
+  for card in cards
+    if match = num.match(card.pattern)
+      # Use card with higher match length / specificity
+      if !foundCard or match[0].length > foundCard[1][0].length
+        foundCard = [card, match]
+  foundCard && foundCard[0]
 
 cardFromType = (type) ->
   return card for card in cards when card.type is type
@@ -526,7 +532,7 @@ class Payment
     cards.push(cardObject)
   @removeFromCardArray: (type) ->
     for key, value of cards
-      if(value.type == type)
+      if value.type == type
         cards.splice(key, 1)
     return true
 
