@@ -16,7 +16,7 @@ module.exports = function (config) {
   config.set({
     basePath: ".",
     frameworks: ["es6-shim", "chai", "mocha", "sinon"],
-    files: ["node_modules/es6-shim/es6-shim.js", "tests.bundle.js"],
+    files: ["tests.bundle.js"],
     preprocessors: {
       "tests.bundle.js": ["webpack", "sourcemap"],
     },
