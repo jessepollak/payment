@@ -4,14 +4,6 @@ delete webpackConfig.externals;
 delete webpackConfig.entry;
 delete webpackConfig.output;
 
-webpackConfig.postLoaders = [
-  {
-    test: /\.(js|coffee)$/,
-    exclude: /(spec|node_modules)\//,
-    loader: "istanbul-instrumenter",
-  },
-];
-
 module.exports = function (config) {
   config.set({
     basePath: ".",
