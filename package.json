@@ -1,6 +1,6 @@
 {
   "name": "payment",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "description": "A general purpose library for building credit card forms, validating inputs and formatting numbers. Base on jquery.payment by @stripe, but without the jQuery.",
   "keywords": [
     "payment",
@@ -16,10 +16,10 @@
   "main": "lib/index.js",
   "scripts": {
     "compile": "coffee -o lib/ --compile ./src/*.coffee",
-    "build": "NODE_ENV=production webpack",
+    "build": "npm run env NODE_ENV=production && webpack",
     "development": "coffee -o lib/ --compile --watch ./src/*.coffee",
     "preversion": "npm run test",
-    "prepublish": "NODE_ENV=production npm run compile",
+    "prepublish": "npm run env  NODE_ENV=production npm run compile",
     "postpublish": "git push origin master && git push --tags",
     "test": "karma start --single-run --browsers PhantomJS"
   },
@@ -29,7 +29,7 @@
     "coffee-script": "~1.10",
     "jsdom": "~9.2",
     "json-loader": "^0.5.4",
-    "karma": "^5.1.0",
+    "karma": "^5.2.3",
     "karma-chai": "^0.1.0",
     "karma-chai-plugins": "^0.7.0",
     "karma-chrome-launcher": "^0.2.3",
@@ -38,17 +38,18 @@
     "karma-mocha": "^2.0.1",
     "karma-phantomjs-launcher": "^1.0.0",
     "karma-sinon": "^1.0.4",
-    "karma-sourcemap-loader": "^0.3.7",
+    "karma-sourcemap-loader": "^0.3.8",
     "karma-webpack": "^4.0.2",
-    "mocha": "^8.0.1",
+    "mocha": "^8.2.1",
     "mocha-webpack": "^1.1.0",
     "mversion": "^2.0.0",
-    "nodemon": "^2.0.4",
+    "nodemon": "^2.0.6",
     "phantomjs-prebuilt": "^2.1.7",
     "run-sequence": "~1.2.1",
     "tiny-lr": "^1.1.1",
     "vinyl-source-stream": "~1.1.0",
-    "webpack": "^4.44.0"
+    "webpack": "^4.44.2",
+    "webpack-cli": "^4.2.0"
   },
   "dependencies": {
     "qj": "~2.0.0"
