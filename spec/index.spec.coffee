@@ -76,6 +76,7 @@ describe 'payment', ->
       assert(Payment.fns.validateCardNumber('6759649826438453'), 'maestro')
       assert(Payment.fns.validateCardNumber('6759 4111 0000 0008'), 'maestro')
       assert(Payment.fns.validateCardNumber('6759 6498 2643 8453'), 'maestro')
+      assert(Payment.fns.validateCardNumber('5854 4424 5645 0444'), 'maestro')
     it 'should validate hipercard card types', ->
       assert(Payment.fns.validateCardNumber('6062821086773091'), 'hipercard')
       assert(Payment.fns.validateCardNumber('6375683647504601'), 'hipercard')
@@ -84,6 +85,9 @@ describe 'payment', ->
       assert(Payment.fns.validateCardNumber('6012135281693108'), 'hipercard')
       assert(Payment.fns.validateCardNumber('38410036464094'), 'hipercard')
       assert(Payment.fns.validateCardNumber('38414050328938'), 'hipercard')
+    it 'should validate troy card types', ->
+      assert(Payment.fns.validateCardNumber('9792817609140009'), 'troy')
+      assert(Payment.fns.validateCardNumber('9792817609140132'), 'troy')
 
   describe 'Validating a CVC', ->
     it 'should fail if is empty', ->
@@ -170,7 +174,7 @@ describe 'payment', ->
       assert.equal topic, false
 
     it 'should support year shorthand', ->
-      assert.equal Payment.fns.validateCardExpiry('05', '20'), true
+      assert.equal Payment.fns.validateCardExpiry('05', '25'), true
 
   describe 'Validating a CVC number', ->
     it 'should validate a three digit number with no card type', ->
@@ -234,6 +238,10 @@ describe 'payment', ->
     it 'should not miscategorize cards with 5067 in them as elo', ->
       topic = Payment.fns.cardType '4012506712121212'
       assert.equal topic, 'visa'
+
+    it 'that begins with 9792 should return Troy', ->
+      topic = Payment.fns.cardType '9792123456789012'
+      assert.equal topic, 'troy'
 
     it 'should return hipercard type', ->
       assert.equal (Payment.fns.cardType '384100'), 'hipercard'
@@ -654,3 +662,28 @@ describe 'payment', ->
       cvc.dispatchEvent(ev)
 
       assert.equal QJ.val(cvc), '1234'
+
+    describe 'Adding and removing cards', ->
+      cards = undefined
+
+      # Because Payment uses a global card array, we need to
+      # ensure it gets reset after each test
+      beforeEach ->
+        cards = Payment.getCardArray().slice()
+      afterEach ->
+        Payment.setCardArray(cards)
+
+      it 'should remove card by type', ->
+        Payment.removeFromCardArray('amex')
+        assert.equal 14, Payment.getCardArray().length
+
+      it 'should add custom card', ->
+        Payment.addToCardArray({
+          type: 'sorocred'
+          pattern: /^6278/
+          format: /(\d{1,4})/g
+          length: [16]
+          cvcLength: [3]
+          luhn: true
+        })
+        assert.equal 16, Payment.getCardArray().length
