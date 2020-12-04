@@ -406,6 +406,7 @@ cursorSafeAssignValue = (target, value) ->
 # Public
 
 class Payment
+  @J: QJ
   @fns:
     cardExpiryVal: (value) ->
       value = value.replace(/\s/g, '')
