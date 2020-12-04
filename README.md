@@ -34,6 +34,7 @@ Supported card types are:
 * UnionPay
 * Elo
 * Hipercard
+* Troy
 
 ## API
 
