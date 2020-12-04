@@ -45,7 +45,7 @@ var payment =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {var Payment, QJ, cardFromNumber, cardFromType, cards, defaultFormat, formatBackCardNumber, formatBackExpiry, formatCardNumber, formatExpiry, formatForwardExpiry, formatForwardSlash, formatMonthExpiry, hasTextSelected, luhnCheck, reFormatCardNumber, restrictCVC, restrictCardNumber, restrictCombinedExpiry, restrictExpiry, restrictMonthExpiry, restrictNumeric, restrictYearExpiry, setCardType,
+	/* WEBPACK VAR INJECTION */(function(global) {var Payment, QJ, cardFromNumber, cardFromType, cards, cursorSafeAssignValue, defaultFormat, formatBackCardNumber, formatBackExpiry, formatCardNumber, formatExpiry, formatForwardExpiry, formatForwardSlash, formatMonthExpiry, hasTextSelected, luhnCheck, reFormatCardNumber, restrictCVC, restrictCardNumber, restrictCombinedExpiry, restrictExpiry, restrictMonthExpiry, restrictNumeric, restrictYearExpiry, setCardType,
 	  indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 	QJ = __webpack_require__(1);
@@ -204,7 +204,7 @@ var payment =
 	      target = e.target;
 	      value = QJ.val(target);
 	      value = Payment.fns.formatCardNumber(value);
-	      QJ.val(target, value);
+	      cursorSafeAssignValue(target, value);
 	      return QJ.trigger(target, 'change');
 	    };
 	  })(this));
@@ -478,6 +478,15 @@ var payment =
 	    QJ.addClass(target, cardType);
 	    QJ.toggleClass(target, 'identified', cardType !== 'unknown');
 	    return QJ.trigger(target, 'payment.cardType', cardType);
+	  }
+	};
+
+	cursorSafeAssignValue = function(target, value) {
+	  var selectionEnd;
+	  selectionEnd = target.selectionEnd;
+	  QJ.val(target, value);
+	  if (selectionEnd) {
+	    return target.selectionEnd = selectionEnd;
 	  }
 	};
 

@@ -174,7 +174,7 @@ reFormatCardNumber = (e) ->
     target = e.target
     value   = QJ.val(target)
     value   = Payment.fns.formatCardNumber(value)
-    QJ.val(target, value)
+    cursorSafeAssignValue(target, value)
     QJ.trigger(target, 'change')
 
 formatCardNumber = (maxLength) -> (e) ->
@@ -397,6 +397,11 @@ setCardType = (e) ->
     QJ.addClass target, cardType
     QJ.toggleClass target, 'identified', cardType isnt 'unknown'
     QJ.trigger target, 'payment.cardType', cardType
+
+cursorSafeAssignValue = (target, value) ->
+  selectionEnd = target.selectionEnd
+  QJ.val(target, value)
+  target.selectionEnd = selectionEnd if selectionEnd
 
 # Public
 
