@@ -548,4 +548,4 @@ class Payment
     return true
 
 module.exports = Payment
-global.Payment = Payment
+globalThis.Payment = Payment
