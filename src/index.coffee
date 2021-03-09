@@ -1,3 +1,4 @@
+globalThis = require('globalthis/polyfill')()
 QJ = require 'qj'
 
 defaultFormat = /(\d{1,4})/g
@@ -548,4 +549,4 @@ class Payment
     return true
 
 module.exports = Payment
-global.Payment = Payment
+globalThis.Payment = Payment
