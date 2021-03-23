@@ -57,6 +57,7 @@ describe 'payment', ->
     it 'should validate jcb card types', ->
       assert(Payment.fns.validateCardNumber('3530111333300000'), 'jcb')
       assert(Payment.fns.validateCardNumber('3566002020360505'), 'jcb')
+      assert(Payment.fns.validateCardNumber('3518914107195001'), 'jcb')
     it 'should validate mastercard card types', ->
       assert(Payment.fns.validateCardNumber('5555555555554444'), 'mastercard')
       assert(Payment.fns.validateCardNumber('2221000010000015'), 'mastercard')
