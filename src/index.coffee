@@ -180,13 +180,18 @@ reFormatCardNumber = (e) ->
 
 formatCardNumber = (maxLength) -> (e) ->
   # Only format if input is a number
-  digit = String.fromCharCode(e.which)
+  if e.which > 0 
+    digit = String.fromCharCode(e.which);
+    value = QJ.val(e.target) + digit
+  else # android keycode not provided workaround
+    digit = e.data;
+    value = QJ.val(e.target)
+  
   return unless /^\d+$/.test(digit)
 
   target = e.target
-  value   = QJ.val(target)
-  card    = cardFromNumber(value + digit)
-  length  = (value.replace(/\D/g, '') + digit).length
+  card    = cardFromNumber(value)
+  length  = (value.replace(/\D/g, '')).length
 
   upperLengths = [16]
   upperLengths = card.length if card
@@ -207,6 +212,7 @@ formatCardNumber = (maxLength) -> (e) ->
     re = /(?:^|\s)(\d{4})$/
 
   # If '4242' + 4
+  value = value.substring(0, value.length - 1)
   if re.test(value)
     e.preventDefault()
     QJ.val(target, value + ' ' + digit)
@@ -237,14 +243,18 @@ formatBackCardNumber = (e) ->
 # Format Expiry
 
 formatExpiry = (e) ->
+  target = e.target
   # Only format if input is a number
-  digit = String.fromCharCode(e.which)
+  if e.which > 0 
+    digit = String.fromCharCode(e.which);
+    val = QJ.val(target) + digit
+  else # android keycode not provided workaround
+    digit = e.data;
+    val = QJ.val(target)
+
   return unless /^\d+$/.test(digit)
 
-  target = e.target
-  val     = QJ.val(target) + digit
-
-  if /^\d$/.test(val) and val not in ['0', '1']
+  if /^\d$/.test(val) and val not in ['0', '1'] 
     e.preventDefault()
     QJ.val(target, "0#{val} / ")
     QJ.trigger(target, 'change')
@@ -534,7 +544,7 @@ class Payment
     QJ.on el, 'keydown', formatBackCardNumber
     QJ.on el, 'keyup blur', setCardType
     QJ.on el, 'paste', reFormatCardNumber
-    QJ.on el, 'input', reFormatCardNumber
+    QJ.on el, 'input', formatCardNumber(maxLength)
     el
   @getCardArray: -> return cards
   @setCardArray: (cardArray) ->
