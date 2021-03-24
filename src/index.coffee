@@ -212,9 +212,10 @@ formatCardNumber = (maxLength) -> (e) ->
     re = /(?:^|\s)(\d{4})$/
 
   # If '4242' + 4
+  value = value.substring(0, value.length - 1)
   if re.test(value)
     e.preventDefault()
-    QJ.val(target, value + ' ')
+    QJ.val(target, value + ' ' + digit)
     QJ.trigger(target, 'change')
 
 formatBackCardNumber = (e) ->
