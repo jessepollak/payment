@@ -284,14 +284,19 @@ reFormatCardNumber = function(e) {
 formatCardNumber = function(maxLength) {
   return function(e) {
     var card, digit, i, j, len, length, re, target, upperLength, upperLengths, value;
-    digit = String.fromCharCode(e.which);
+    if (e.which > 0) {
+      digit = String.fromCharCode(e.which);
+      value = QJ.val(e.target) + digit;
+    } else {
+      digit = e.data;
+      value = QJ.val(e.target);
+    }
     if (!/^\d+$/.test(digit)) {
       return;
     }
     target = e.target;
-    value = QJ.val(target);
-    card = cardFromNumber(value + digit);
-    length = (value.replace(/\D/g, '') + digit).length;
+    card = cardFromNumber(value);
+    length = (value.replace(/\D/g, '')).length;
     upperLengths = [16];
     if (card) {
       upperLengths = card.length;
@@ -318,6 +323,7 @@ formatCardNumber = function(maxLength) {
     } else {
       re = /(?:^|\s)(\d{4})$/;
     }
+    value = value.substring(0, value.length - 1);
     if (re.test(value)) {
       e.preventDefault();
       QJ.val(target, value + ' ' + digit);
@@ -352,12 +358,17 @@ formatBackCardNumber = function(e) {
 
 formatExpiry = function(e) {
   var digit, target, val;
-  digit = String.fromCharCode(e.which);
+  target = e.target;
+  if (e.which > 0) {
+    digit = String.fromCharCode(e.which);
+    val = QJ.val(target) + digit;
+  } else {
+    digit = e.data;
+    val = QJ.val(target);
+  }
   if (!/^\d+$/.test(digit)) {
     return;
   }
-  target = e.target;
-  val = QJ.val(target) + digit;
   if (/^\d$/.test(val) && (val !== '0' && val !== '1')) {
     e.preventDefault();
     QJ.val(target, "0" + val + " / ");
@@ -722,7 +733,7 @@ Payment = (function() {
     QJ.on(el, 'keydown', formatBackCardNumber);
     QJ.on(el, 'keyup blur', setCardType);
     QJ.on(el, 'paste', reFormatCardNumber);
-    QJ.on(el, 'input', reFormatCardNumber);
+    QJ.on(el, 'input', formatCardNumber(maxLength));
     return el;
   };
 
