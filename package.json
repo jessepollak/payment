@@ -1,6 +1,6 @@
 {
   "name": "payment",
-  "version": "2.4.2",
+  "version": "2.4.3",
   "description": "A general purpose library for building credit card forms, validating inputs and formatting numbers. Base on jquery.payment by @stripe, but without the jQuery.",
   "keywords": [
     "payment",
@@ -15,11 +15,11 @@
   },
   "main": "lib/index.js",
   "scripts": {
-    "compile": "coffee -o lib/ --compile ./src/*.coffee",
+    "compile": "coffee -o lib/ --compile ./src/index.coffee",
     "build": "npm run env NODE_ENV=production && webpack",
-    "development": "coffee -o lib/ --compile --watch ./src/*.coffee",
+    "development": "coffee -o lib/ --compile --watch ./src/index.coffee",
     "preversion": "npm run test",
-    "prepublish": "npm run env  NODE_ENV=production npm run compile",
+    "prepare": "npm run env NODE_ENV=production && npm run compile",
     "postpublish": "git push origin master && git push --tags",
     "test": "karma start --single-run --browsers PhantomJS"
   },
