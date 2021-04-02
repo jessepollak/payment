@@ -1,4 +1,5 @@
-# Payment [![Build Status](https://travis-ci.org/jessepollak/payment.svg?branch=master)](https://travis-ci.org/jessepollak/payment)
+# Payment [![Build Status](https://travis-ci.org/jessepollak/payment.svg?branch=master)](https://travis-ci.org/jessepollak/payment) ![npm](https://img.shields.io/npm/v/payment)
+
 
 A jQuery-free general purpose library for building credit card forms, validating inputs and formatting numbers. Heavily, heavily based on [@stripe's jquery.payment library](http://github.com/stripe/jquery.payment), but without the jQuery.
 
