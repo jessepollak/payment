@@ -47,7 +47,7 @@
     "phantomjs-prebuilt": "^2.1.7",
     "run-sequence": "~2.2.1",
     "tiny-lr": "^2.0.0",
-    "vinyl-source-stream": "~1.1.0",
+    "vinyl-source-stream": "~2.0.0",
     "webpack": "^4.44.2",
     "webpack-cli": "^4.2.0"
   },
