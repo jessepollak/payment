@@ -64,7 +64,7 @@ cards = [
       type: 'laser',
       pattern: /^(6706|6771|6709)/,
       format: defaultFormat,
-      length: [16, 17, 18, 19],
+      length: [16..19],
       cvcLength: [3],
       luhn: true
   }
@@ -72,7 +72,7 @@ cards = [
       type: 'maestro',
       pattern: /^(50|5[6-9]|6007|6220|6304|6703|6708|6759|676[1-3])/,
       format: defaultFormat,
-      length: [12, 13, 14, 15, 16, 17, 18, 19],
+      length: [12..19],
       cvcLength: [3],
       luhn: true
   }
@@ -104,7 +104,7 @@ cards = [
       type: 'unionpay',
       pattern: /^62/,
       format: defaultFormat,
-      length: [16, 17, 18, 19],
+      length: [16..19],
       cvcLength: [3],
       luhn: false
   }

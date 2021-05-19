@@ -252,7 +252,7 @@ luhnCheck = function(num) {
 };
 
 hasTextSelected = function(target) {
-  var e, error, ref;
+  var e, ref;
   try {
     if ((target.selectionStart != null) && target.selectionStart !== target.selectionEnd) {
       return true;
