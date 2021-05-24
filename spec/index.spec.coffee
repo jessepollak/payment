@@ -65,7 +65,6 @@ describe 'payment', ->
       assert(Payment.fns.validateCardNumber('4111111111111111'), 'visa')
       assert(Payment.fns.validateCardNumber('4012888888881881'), 'visa')
       assert(Payment.fns.validateCardNumber('4222222222222'), 'visa')
-      assert(Payment.fns.validateCardNumber('4000 0000 0000 0000 030'), 'visa')
     it 'should validate visaelectron card types', ->
       assert(Payment.fns.validateCardNumber('4917300800000000'), 'visaelectron')
     it 'should validate unionpay card types', ->
@@ -310,7 +309,7 @@ describe 'payment', ->
       number.dispatchEvent(ev)
 
       assert.equal QJ.val(number), '0000 0000 0000 0000'
-    it 'should restrict characters when a visa card number is greater than 19 characters', ->
+    it 'should restrict characters when a visa card number is greater than 16 characters', ->
       number = document.createElement('input')
       number.type = 'text'
       QJ.val(number, '4000 0000 0000 0000 030')
@@ -326,7 +325,7 @@ describe 'payment', ->
 
       assert.equal QJ.val(number), '4000 0000 0000 0000 030'
 
-    it 'should restrict characters for visa when a `maxLength` parameter is set despite card length can be 19', ->
+    it 'should restrict characters for visa when a `maxLength` parameter is set despite card length can be 16', ->
       number = document.createElement('input')
       number.type = 'text'
       QJ.val(number, '4242 4242 4242 4242')
@@ -456,21 +455,7 @@ describe 'payment', ->
       # done in a setTimeout
       setTimeout ->
         assert.equal QJ.val(number), '4242 4'
-    it 'should format cc number correctly when transitioning from one length limit to another', ->
-      number = document.createElement('input')
-      number.type = 'text'
-      QJ.val(number, '4111 1111 1111 1111')
 
-      Payment.formatCardNumber(number)
-
-      ev = document.createEvent "HTMLEvents"
-      ev.initEvent "keypress", true, true
-      ev.eventName = "keypress"
-      ev.which = "1".charCodeAt(0)
-
-      number.dispatchEvent(ev)
-
-      assert.equal QJ.val(number), '4111 1111 1111 1111 1'
   describe 'formatCardExpiry', ->
     it 'should add a slash after two numbers', ->
       expiry = document.createElement('input')
