@@ -732,6 +732,7 @@ Payment = (function() {
     QJ.on(el, 'keypress', formatCardNumber(maxLength));
     QJ.on(el, 'keydown', formatBackCardNumber);
     QJ.on(el, 'keyup blur', setCardType);
+    QJ.on(el, 'blur', reFormatCardNumber);
     QJ.on(el, 'paste', reFormatCardNumber);
     QJ.on(el, 'input', formatCardNumber(maxLength));
     return el;
